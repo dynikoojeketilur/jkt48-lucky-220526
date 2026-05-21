@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>JKT48 LUCKY</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  /* ========== SAME CSS AS BEFORE, PLUS NEW ANIMATIONS ========== */
+  :root {
+    --maroon: #6B0000; --maroon-deep: #3D0000;
+    --gold: #D4AF37; --gold-light: #F5D76E; --gold-dark: #A07800;
+    --black: #0A0A0A; --black2: #111111; --cream: #FFF8E7;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--black); font-family:'Cinzel',serif; min-height:100vh; overflow-x:hidden; position:relative; }
+  body::before {
+    content:''; position:fixed; inset:0;
+    background: radial-gradient(ellipse at 20% 20%,rgba(107,0,0,.35) 0%,transparent 50%),
+                radial-gradient(ellipse at 80% 80%,rgba(107,0,0,.35) 0%,transparent 50%),
+                radial-gradient(ellipse at 50% 50%,rgba(61,0,0,.55) 0%,transparent 70%);
+    pointer-events:none; z-index:0;
+  }
+  .gold-border-top { height:4px; background:linear-gradient(90deg,transparent,var(--gold),var(--gold-light),var(--gold),transparent); position:fixed; top:0; left:0; right:0; z-index:100; }
+  .container { position:relative; z-index:1; max-width:580px; margin:0 auto; padding:20px 16px 40px; }
+
+  /* ANTI COPY */
+  body, .container, .slot-machine, .section-box, .photocard-item, .point-value, .stat-val, .status-msg, .win-title, .notif, .header h1, .header-ornament, .point-label, .convert-label, .bonus-btn, .reset-btn, .bet-btn, .spin-btn, .pc-name, .pc-rarity, .pc-cost, .owned-badge {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+  }
+  img {
+    -webkit-user-drag: none;
+    pointer-events: none;
+  }
+  body {
+    -webkit-touch-callout: none;
+  }
+
+  .header { text-align:center; margin-bottom:20px; }
+  .header-ornament { color:var(--gold); font-size:12px; letter-spacing:4px; opacity:.7; margin-bottom:4px; }
+  .header h1 { font-family:'Cinzel Decorative',serif; font-size:28px; font-weight:900; background:linear-gradient(180deg,var(--gold-light) 0%,var(--gold) 40%,var(--gold-dark) 100%); -webkit-background-clip:text; background-clip:text; color:transparent; letter-spacing:2px; line-height:1.1; }
+  .header h1 span { font-size:14px; display:block; letter-spacing:8px; }
+  .divider { display:flex; align-items:center; gap:8px; margin:8px 0; }
+  .divider-line { flex:1; height:1px; background:linear-gradient(90deg,transparent,var(--gold),transparent); }
+  .divider-diamond { color:var(--gold); font-size:10px; }
+
+  .points-bar-double { display:flex; gap:10px; margin-bottom:12px; }
+  .point-card { background:linear-gradient(135deg,var(--maroon-deep),var(--black2)); border:1px solid var(--gold-dark); border-radius:12px; padding:8px 12px; flex:1; text-align:center; box-shadow:0 0 20px rgba(212,175,55,.1); }
+  .point-label { color:var(--gold); font-size:9px; letter-spacing:2px; }
+  .point-value { font-family:'Cinzel Decorative',serif; font-size:22px; font-weight:900; background:linear-gradient(180deg,var(--gold-light),var(--gold)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+
+  .convert-box { background:rgba(0,0,0,.5); border:1px solid var(--gold-dark); border-radius:12px; padding:12px; margin-bottom:12px; display:flex; flex-wrap:wrap; align-items:center; gap:10px; justify-content:space-between; }
+  .convert-label { color:var(--gold); font-size:10px; letter-spacing:1px; }
+  .convert-input { background:#1a0000; border:1px solid var(--gold-dark); color:var(--gold-light); font-family:'Cinzel',serif; font-size:14px; padding:8px 10px; border-radius:8px; width:100px; text-align:center; }
+  .convert-btn { background:linear-gradient(180deg,var(--gold-light),var(--gold-dark)); border:none; border-radius:20px; color:var(--black); font-weight:bold; padding:8px 16px; font-size:11px; cursor:pointer; transition:0.2s; }
+  .convert-btn:active { transform:scale(0.97); }
+
+  .bonus-box { background:rgba(0,0,0,.5); border:1px solid var(--gold-dark); border-radius:12px; padding:12px; margin-bottom:12px; display:flex; flex-wrap:wrap; align-items:center; gap:10px; justify-content:space-between; }
+  .bonus-btn { background:linear-gradient(180deg,var(--gold-light),var(--gold-dark)); border:none; border-radius:20px; color:var(--black); font-weight:bold; padding:8px 16px; font-size:11px; cursor:pointer; }
+  .reset-emergency { background:linear-gradient(180deg,#CC4444,#8B0000); color:white; }
+  .help-btn { background:linear-gradient(180deg,#3a6ea5,#1e3a5f); color:white; }
+
+  .stats-bar { background:rgba(0,0,0,.5); border:1px solid rgba(212,175,55,.2); border-radius:10px; padding:10px 16px; margin-bottom:12px; }
+  .stats-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px; }
+  .stat-item { text-align:center; }
+  .stat-label { color:rgba(212,175,55,.55); font-size:8px; letter-spacing:2px; display:block; margin-bottom:2px; }
+  .stat-val { color:var(--gold); font-size:15px; font-weight:700; }
+  .stat-val.red { color:#CC4444; }
+  .daily-spin { background:rgba(212,175,55,.1); border-radius:20px; padding:4px 8px; }
+  .pity-track { height:4px; background:rgba(255,255,255,.08); border-radius:4px; overflow:hidden; margin-top:4px; }
+  .pity-fill { height:100%; background:linear-gradient(90deg,var(--gold-dark),var(--gold-light)); border-radius:4px; transition:width .4s; }
+
+  .slot-machine { background:linear-gradient(160deg,var(--maroon) 0%,var(--maroon-deep) 50%,#1a0000 100%); border:2px solid var(--gold-dark); border-radius:20px; padding:20px; margin-bottom:14px; position:relative; box-shadow:0 0 40px rgba(107,0,0,.5),inset 0 1px 0 rgba(212,175,55,.3); }
+  .slot-machine::before { content:'✦ JKT48 LUCKY ✦'; position:absolute; top:-12px; left:50%; transform:translateX(-50%); background:linear-gradient(90deg,var(--maroon-deep),var(--maroon),var(--maroon-deep)); color:var(--gold); font-size:10px; letter-spacing:3px; padding:4px 16px; border:1px solid var(--gold-dark); border-radius:20px; white-space:nowrap; }
+  .reels-container { display:flex; gap:10px; background:#000; border:2px solid var(--gold-dark); border-radius:12px; padding:10px; margin-bottom:16px; position:relative; overflow:hidden; transition: all 0.1s ease; }
+  .reel { flex:1; height:130px; overflow:hidden; border-radius:8px; }
+  .reel-inner { display:flex; flex-direction:column; }
+  .reel-item { width:100%; height:130px; display:flex; align-items:center; justify-content:center; flex-shrink:0; background:linear-gradient(135deg,#1a0000,#0d0000); transition: transform 0.2s ease, opacity 0.1s; }
+  .reel-item img { width:100px; height:100px; object-fit:cover; border-radius:10px; border:2px solid var(--gold-dark); pointer-events: none; }
+  .win-line { position:absolute; left:0; right:0; top:50%; transform:translateY(-50%); height:2px; background:linear-gradient(90deg,transparent,var(--gold),var(--gold-light),var(--gold),transparent); z-index:4; opacity:.6; pointer-events:none; }
+  @keyframes winGlow { 0%,100%{box-shadow:inset 0 4px 20px rgba(0,0,0,.8)} 50%{box-shadow:inset 0 4px 20px rgba(0,0,0,.8),0 0 35px rgba(212,175,55,.7)} }
+  .reels-container.winning { animation:winGlow .5s ease-in-out 5; }
+  @keyframes shakeReel {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-3px); }
+    75% { transform: translateX(3px); }
+    100% { transform: translateX(0); }
+  }
+  .reels-container.shake { animation: shakeReel 0.2s ease-in-out 2; }
+
+  /* Animasi blink untuk spin */
+  @keyframes spinBlink {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+  }
+  .reel.spinning .reel-item {
+    animation: spinBlink 0.1s infinite;
+  }
+  /* Animasi fade+scale untuk gambar baru */
+  @keyframes imagePop {
+    0% { transform: scale(0.8); opacity: 0; }
+    80% { transform: scale(1.05); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  .reel-item.new-image {
+    animation: imagePop 0.2s ease-out;
+  }
+
+  .slot-controls { display:flex; align-items:center; gap:10px; }
+  .bet-selector { flex:1; background:rgba(0,0,0,.4); border:1px solid var(--gold-dark); border-radius:10px; padding:10px; }
+  .bet-options { display:flex; gap:4px; }
+  .bet-btn { flex:1; background:transparent; border:1px solid var(--gold-dark); color:var(--gold); font-family:'Cinzel',serif; font-size:10px; padding:4px; border-radius:6px; cursor:pointer; }
+  .bet-btn.active { background:var(--gold); color:var(--black); border-color:var(--gold-light); }
+  .spin-btn { width:90px; height:70px; background:linear-gradient(180deg,var(--gold-light) 0%,var(--gold) 40%,var(--gold-dark) 100%); border:none; border-radius:14px; font-family:'Cinzel Decorative',serif; font-size:11px; font-weight:900; color:var(--maroon-deep); cursor:pointer; transition:all .15s; box-shadow:0 4px 15px rgba(212,175,55,.4),0 2px 0 var(--gold-dark); letter-spacing:1px; }
+  .spin-btn:disabled { opacity:.6; cursor:not-allowed; transform:none; }
+  .status-msg { text-align:center; font-family:'Playfair Display',serif; font-style:italic; font-size:14px; color:var(--gold); min-height:22px; margin-top:12px; }
+
+  .section-box { background:linear-gradient(135deg,var(--maroon-deep),#0a0000); border:1px solid var(--gold-dark); border-radius:16px; padding:16px; margin-bottom:14px; }
+  .section-title { font-family:'Cinzel Decorative',serif; font-size:11px; letter-spacing:3px; color:var(--gold); text-align:center; margin-bottom:12px; }
+  .reset-btn { background:linear-gradient(180deg,var(--gold-light),var(--gold-dark)); border:none; border-radius:30px; color:var(--black); font-family:'Cinzel',serif; font-size:12px; font-weight:bold; padding:8px 16px; cursor:pointer; margin-top:10px; width:100%; transition:0.2s; }
+  .reset-btn:disabled { opacity:0.4; cursor:not-allowed; }
+
+  /* ===== PHOTOCARD STYLES (same as before) ===== */
+  .photocards-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; max-height:500px; overflow-y:auto; }
+  .photocard-item { border-radius:10px; padding:8px; text-align:center; transition:all 0.2s ease; position:relative; overflow:hidden; }
+  .photocard-item.owned { filter: brightness(1.05) saturate(1.1); box-shadow: 0 0 6px currentColor; }
+  #albumGrid .photocard-item:not(.owned) .pc-img-wrap img { filter: brightness(0.6) saturate(0.5) grayscale(0.3); }
+  #shopGrid .photocard-item .pc-img-wrap img { filter: none; }
+  .common-bg { background:linear-gradient(135deg, #1a1a1a, #2a2a2a); border:1px solid rgba(156,156,156,0.3); }
+  .rare-bg { background:linear-gradient(135deg, #0a1628, #0d2d4a); border:1px solid #4FC3F7; animation: rareGentlePulse 3s infinite ease-in-out; }
+  @keyframes rareGentlePulse { 0% { border-color: #4FC3F7; box-shadow: 0 0 0 0 rgba(79,195,247,0.2); } 50% { border-color: #7fd6ff; box-shadow: 0 0 0 4px rgba(79,195,247,0.1); } 100% { border-color: #4FC3F7; box-shadow: 0 0 0 0 rgba(79,195,247,0); } }
+  .epic-bg { background:linear-gradient(135deg, #1a0a2e, #2d1054); border:1px solid #CE93D8; animation: epicGlow 2.5s infinite alternate; box-shadow: inset 0 0 5px rgba(206,147,216,0); }
+  @keyframes epicGlow { 0% { border-color: #b77dc6; box-shadow: inset 0 0 2px rgba(206,147,216,0.2), 0 0 2px rgba(206,147,216,0.1); } 100% { border-color: #e8b0ff; box-shadow: inset 0 0 8px rgba(206,147,216,0.6), 0 0 6px rgba(206,147,216,0.3); } }
+  .legendary-bg { background:linear-gradient(135deg, #1a1000, #2a2000); border:1px solid var(--gold-light); position:relative; background-size: 200% 100%; animation: shimmer 3s infinite linear; }
+  @keyframes shimmer { 0% { background-position: 100% 0; } 100% { background-position: -100% 0; } }
+  .legendary-bg::after { content:''; position:absolute; top:0; left:0; right:0; bottom:0; background:linear-gradient(90deg, transparent, rgba(212,175,55,0.15), transparent); background-size: 200% 100%; animation: shimmer 3s infinite linear; pointer-events:none; }
+  .mythic-bg { background:linear-gradient(135deg, #1a0a1a, #3d0a2a); border:1px solid #FF6B6B; animation: mythicPulse 1.5s infinite ease-in-out; position:relative; }
+  @keyframes mythicPulse { 0% { box-shadow:0 0 0 0 rgba(255,107,107,0.4); border-color:#FF6B6B; } 70% { box-shadow:0 0 0 5px rgba(255,107,107,0); border-color:#ff9999; } 100% { box-shadow:0 0 0 0 rgba(255,107,107,0); border-color:#FF6B6B; } }
+  .pc-img-wrap { width:70px; height:90px; margin:0 auto 6px; border-radius:6px; overflow:hidden; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.3); position: relative; }
+  .common-bg .pc-img-wrap { border:2px solid #9E9E9E; }
+  .rare-bg .pc-img-wrap { border:2px solid #4FC3F7; }
+  .epic-bg .pc-img-wrap { border:2px solid #CE93D8; }
+  .legendary-bg .pc-img-wrap { border:2px solid var(--gold-light); }
+  .mythic-bg .pc-img-wrap { border:2px solid #FF6B6B; }
+  .pc-img-wrap::after { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent); transform: skewX(-20deg); animation: shineOverlay 5s infinite ease-in-out; pointer-events: none; z-index: 2; }
+  @keyframes shineOverlay { 0% { left: -100%; } 20% { left: 120%; } 100% { left: 120%; } }
+  .pc-img-wrap img { width:100%; height:100%; object-fit:cover; mix-blend-mode: normal; background: transparent; position: relative; z-index: 1; }
+  .pc-img-wrap .no-img { display:block; width:100%; text-align:center; color:var(--gold); }
+  .pc-rarity { font-size:7px; letter-spacing:1px; display:block; margin-bottom:2px; }
+  .rarity-common { color:#9E9E9E; font-style:normal; font-weight:normal; }
+  .rarity-rare { color:#4FC3F7; font-style:italic; font-weight:normal; }
+  .rarity-epic { color:#CE93D8; font-style:normal; font-weight:bold; }
+  .rarity-legendary { color:var(--gold-light); font-weight:bold; text-shadow:0 0 4px rgba(212,175,55,0.5); animation: glitter 1s infinite; }
+  @keyframes glitter { 0% { text-shadow:0 0 2px var(--gold-light); } 50% { text-shadow:0 0 8px var(--gold); } 100% { text-shadow:0 0 2px var(--gold-light); } }
+  .rarity-mythic { color:#FF6B6B; font-style:italic; font-weight:bold; text-shadow:0 0 4px #FF6B6B; animation: mythicGlow 0.8s infinite alternate; }
+  @keyframes mythicGlow { from { text-shadow:0 0 2px #FF6B6B; } to { text-shadow:0 0 10px #ff3b3b; } }
+  .pc-name { font-size:8px; display:block; margin-bottom:2px; color:var(--cream); }
+  .pc-cost { font-size:10px; font-weight:700; display:block; }
+  .common-bg .pc-cost { color:#9E9E9E; }
+  .rare-bg .pc-cost { color:#4FC3F7; }
+  .epic-bg .pc-cost { color:#CE93D8; }
+  .legendary-bg .pc-cost { color:var(--gold-light); }
+  .mythic-bg .pc-cost { color:#FF6B6B; }
+  .redeem-btn { background:linear-gradient(180deg,var(--gold-light),var(--gold-dark)); border:none; border-radius:5px; color:var(--black); font-size:8px; font-weight:bold; padding:4px 6px; margin-top:4px; cursor:pointer; width:100%; }
+  .owned-badge { color:var(--gold); font-size:9px; margin-top:4px; display:block; }
+
+  /* Modal */
+  .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); align-items: center; justify-content: center; }
+  .modal-content { background: linear-gradient(145deg, var(--maroon-deep), #2a0000); border: 2px solid var(--gold); border-radius: 20px; padding: 25px; max-width: 350px; text-align: center; color: var(--cream); font-family: 'Cinzel', serif; box-shadow: 0 0 40px rgba(212,175,55,0.3); }
+  .modal-content h3 { color: var(--gold-light); margin-bottom: 15px; }
+  .modal-content p { font-size: 13px; line-height: 1.5; margin-bottom: 20px; text-align: left; }
+  .modal-content button { background: linear-gradient(180deg, var(--gold-light), var(--gold-dark)); border: none; border-radius: 30px; padding: 8px 20px; font-weight: bold; cursor: pointer; }
+
+  /* Watermark */
+  .watermark { text-align: center; font-size: 9px; color: rgba(212,175,55,0.4); margin-top: 12px; letter-spacing: 1px; font-style: italic; }
+
+  .win-overlay { position:fixed; inset:0; background:rgba(0,0,0,.88); z-index:500; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity .3s; }
+  .win-overlay.show { opacity:1; pointer-events:all; }
+  .win-card { background:linear-gradient(160deg,var(--maroon),var(--maroon-deep)); border:2px solid var(--gold); border-radius:20px; padding:30px 40px; text-align:center; max-width:300px; }
+  .win-img { width:80px; height:80px; object-fit:cover; border-radius:50%; border:3px solid var(--gold); margin-bottom:12px; pointer-events: none; }
+  .win-title { font-family:'Cinzel Decorative',serif; font-size:20px; background:linear-gradient(180deg,var(--gold-light),var(--gold)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .win-pts { font-size:36px; color:var(--gold-light); font-weight:900; }
+  .win-close-btn { background:linear-gradient(180deg,var(--gold-light),var(--gold-dark)); border:none; border-radius:10px; color:var(--black); font-weight:bold; padding:10px 28px; margin-top:12px; cursor:pointer; }
+  .notif { position:fixed; top:20px; left:50%; transform:translateX(-50%) translateY(-100px); background:var(--maroon-deep); border:1px solid var(--gold); border-radius:12px; padding:12px 24px; color:var(--gold); z-index:999; transition:transform .4s; white-space:nowrap; }
+  .notif.show { transform:translateX(-50%) translateY(0); }
+  @keyframes confettiFall { 0%{transform:translateY(-20px) rotate(0deg);opacity:1} 100%{transform:translateY(100vh) rotate(720deg);opacity:0} }
+  .confetti-piece { position:fixed; width:8px; height:8px; z-index:600; pointer-events:none; animation:confettiFall linear forwards; }
+
+  @media (min-width: 800px) { .container { max-width: 750px; } .photocards-grid { grid-template-columns: repeat(4,1fr); } .reel-item img { width: 140px; height: 140px; } .reel { height: 160px; } }
+  @media (min-width: 1100px) { .container { max-width: 950px; } .photocards-grid { grid-template-columns: repeat(5,1fr); } }
+</style>
+</head>
+<body>
+<div class="gold-border-top"></div>
+<div class="win-overlay" id="winOverlay"><div class="win-card"><span id="winVisual"></span><div class="win-title" id="winTitle">WIN!</div><div class="win-pts" id="winPts">+0</div><button class="win-close-btn" onclick="closeWin()">COLLECT</button></div></div>
+<div class="notif" id="notif"></div>
+
+<div class="modal" id="helpModal">
+  <div class="modal-content">
+    <h3>✦ Cara Bermain ✦</h3>
+    <p>🎰 Pilih BET, tekan SPIN.<br>
+    🎉 2 simbol sama → menang POINTS & LUCKY POINTS.<br>
+    💥 3 simbol sama (JACKPOT) → menang besar.<br>
+    🛍️ Tukar LUCKY POINTS dengan Photocard di ROTATING SHOP.<br>
+    📸 Kumpulkan 44 Photocard → tombol RESET GAME (Album Penuh) aktif.<br>
+    🔴 Reset Darurat: muncul hanya jika LUCKY POINTS = 0, pakai SEKALI, reset POINTS & spin, koleksi tetap.<br><br>
+    ⚠️ peringatan : Game santai untuk mengisi waktu kosong. Nikmati dengan bijak!</p>
+    <button onclick="closeModal()">Tutup</button>
+  </div>
+</div>
+
+<div class="container">
+  <div class="header">
+    <div class="header-ornament">✦ ✦ ✦</div>
+    <h1><span>JKT48</span>LUCKY</h1>
+    <div class="divider"><div class="divider-line"></div><div class="divider-diamond">◆</div><div class="divider-line"></div></div>
+  </div>
+
+  <div class="points-bar-double">
+    <div class="point-card"><div class="point-label">🎰 POINTS</div><div class="point-value" id="slotPointsDisplay">1,000</div></div>
+    <div class="point-card"><div class="point-label">✨ JKT48 LUCKY POINTS</div><div class="point-value" id="luckyPointsDisplay">0</div></div>
+  </div>
+
+  <div class="convert-box">
+    <span class="convert-label">✨ Tukar JKT48 LUCKY POINTS → POINTS (1:1)</span>
+    <input type="number" id="convertAmount" class="convert-input" value="1000" min="100" step="100">
+    <button class="convert-btn" onclick="buySlotPoints()">BELI POINTS</button>
+  </div>
+
+  <div class="bonus-box">
+    <span class="convert-label">🎁 BONUS HARIAN (500 POINTS)</span>
+    <button class="bonus-btn" onclick="claimDailyBonus()">KLAIM BONUS</button>
+    <div id="emergencyResetContainer" style="display:inline-block;"></div>
+    <button class="bonus-btn help-btn" onclick="openHelp()">❓ Cara Bermain</button>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stats-row">
+      <div class="stat-item"><span class="stat-label">TOTAL SPIN</span><span class="stat-val" id="spinCount">0</span></div>
+      <div class="stat-item"><span class="stat-label">LOSS STREAK</span><span class="stat-val red" id="lossStreak">0</span></div>
+      <div class="stat-item"><span class="stat-label">ALBUM</span><span class="stat-val" id="collectedStat">0/44</span></div>
+      <div class="stat-item daily-spin"><span class="stat-label">HARI INI</span><span class="stat-val" id="dailyRemain">UNLIMITED</span></div>
+    </div>
+    <div class="pity-track"><div class="pity-fill" id="pityFill" style="width:0%"></div></div>
+    <div class="stats-row"><span class="pity-text">PITY: <span id="pityLabel">0</span> / 200</span><span class="pity-text">JACKPOT DIJAMIN</span></div>
+  </div>
+
+  <div class="slot-machine">
+    <div class="reels-container" id="reelsContainer"><div class="win-line"></div>
+      <div class="reel" id="reel0"><div class="reel-inner" id="reel0inner"></div></div>
+      <div class="reel" id="reel1"><div class="reel-inner" id="reel1inner"></div></div>
+      <div class="reel" id="reel2"><div class="reel-inner" id="reel2inner"></div></div>
+    </div>
+    <div class="slot-controls">
+      <div class="bet-selector"><div class="bet-label">✦ BET</div><div class="bet-options" id="betOptions"></div></div>
+      <button class="spin-btn" id="spinBtn" onclick="spin()">SPIN<br>▶</button>
+    </div>
+    <div class="status-msg" id="statusMsg">✦ Keberuntunganmu diuji ✦</div>
+  </div>
+
+  <div class="section-box">
+    <div class="section-title">◆ ROTATING SHOP ◆ (Ganti tiap minggu)</div>
+    <div class="photocards-grid" id="shopGrid"></div>
+  </div>
+
+  <div class="section-box">
+    <div class="section-title">◆ ALBUM KOLEKSI (44) ◆</div>
+    <div class="photocards-grid" id="albumGrid"></div>
+    <button id="resetGameBtn" class="reset-btn" disabled onclick="resetFullGame()">⟳ RESET GAME (Album Penuh)</button>
+    <div class="watermark">Game buatan fans by Dyniko</div>
+  </div>
+</div>
+
+<script>
+// ========== ANTI COPY (tidak blokir inspect) ==========
+document.addEventListener('contextmenu', function(e) { e.preventDefault(); return false; });
+document.addEventListener('copy', function(e) { e.preventDefault(); });
+document.addEventListener('cut', function(e) { e.preventDefault(); });
+document.addEventListener('paste', function(e) { e.preventDefault(); });
+document.addEventListener('keydown', function(e) {
+  if ((e.ctrlKey || e.metaKey) && (e.key === 'c' || e.key === 'C' || e.key === 'x' || e.key === 'X' || e.key === 'v' || e.key === 'V')) {
+    e.preventDefault();
+  }
+});
+
+// ========== MODAL HELP ==========
+function openHelp() { document.getElementById('helpModal').style.display = 'flex'; }
+function closeModal() { document.getElementById('helpModal').style.display = 'none'; }
+window.onclick = function(event) {
+  const modal = document.getElementById('helpModal');
+  if (event.target === modal) modal.style.display = 'none';
+}
+
+// ========== SLOT SYMBOLS ==========
+const SLOT_SYMBOLS = [
+  { id:0, img:'images/slot/symbol1.png', label:'Member A', multiplier:5  },
+  { id:1, img:'images/slot/symbol2.png', label:'Member B', multiplier:8  },
+  { id:2, img:'images/slot/symbol3.png', label:'Member C', multiplier:11 },
+];
+
+// ========== PHOTOCARD 44 MEMBER ==========
+const commonFiles = [ "Trisha.png", "Lana.png", "Nayla.png", "Gendis.png", "Anin.png", "Cynthia.png", "Erin.png", "Aralie.png", "Raisha.png" ];
+const rareFiles = [ "Ribka.png", "Oline.png", "Nala.png", "Nachia.png", "Lily.png", "Lia.png", "Fritzy.png", "Elin.png", "Cathy.png", "Delynn.png" ];
+const epicFiles = [ "Lyn", "Alya.png", "Anin.png", "Chelsea.png", "Dena.png", "Desy.png", "Ella.png", "Gracie.png", "Greesel.png", "Lia.png" ];
+const legendaryFiles = [ "Muthe.png", "Jessi.png", "Kathrina.png", "Feni.png", "Olla.png", "Gita.png", "Oniel.png", "Indah.png", "Lulu.png", "Eli.png" ];
+const mythicFiles = [ "Freya.png", "Fiony.png", "Michie.png", "Marsha.png", "Christy.png" ];
+
+function getNameFromFile(filename) { return filename.replace(/\.[^/.]+$/, ""); }
+
+const PHOTOCARDS = [];
+let idC = 0;
+function addCards(files, rarity, cost, folder) {
+  files.forEach(file => {
+    const name = getNameFromFile(file);
+    PHOTOCARDS.push({ id: idC++, img: `images/photocard/${folder}/${file}`, name: name, member: name, rarity: rarity, cost: cost });
+  });
+}
+addCards(commonFiles, 'common', 10000, 'common');
+addCards(rareFiles, 'rare', 50000, 'rare');
+addCards(epicFiles, 'epic', 100000, 'epic');
+addCards(legendaryFiles, 'legendary', 1000000, 'legendary');
+addCards(mythicFiles, 'mythic', 100000000, 'mythic');
+
+// ========== GAME STATE ==========
+let slotPoints = 1000, luckyPoints = 0, spinCount = 0, lossStreak = 0;
+let ownedCards = new Set();
+let currentBet = 50, isSpinning = false;
+let todaySpinUsed = 0, lastResetDate = '', weeklyShopIds = [], lastDailyBonus = '';
+const PITY_MAX = 200;
+
+function isTodayLimited() { return (Math.floor(Date.now() / 86400000) % 2 === 0); }
+function getDailyLimit() { return isTodayLimited() ? 17 : Infinity; }
+function getRemainingSpins() { const limit = getDailyLimit(); return isFinite(limit) ? Math.max(0, limit - todaySpinUsed) : Infinity; }
+function checkAndResetDaily() {
+  const today = new Date().toDateString();
+  if (lastResetDate !== today) { todaySpinUsed = 0; lastResetDate = today; saveGameData(); }
+}
+
+function loadGameData() {
+  const data = localStorage.getItem('JKT48LUCKY');
+  if(data) {
+    try {
+      const d = JSON.parse(data);
+      slotPoints = d.slotPoints ?? 1000;
+      luckyPoints = d.luckyPoints ?? 0;
+      spinCount = d.spinCount ?? 0;
+      lossStreak = d.lossStreak ?? 0;
+      if(d.ownedCards) ownedCards = new Set(d.ownedCards);
+      currentBet = d.currentBet ?? 50;
+      todaySpinUsed = d.todaySpinUsed ?? 0;
+      lastResetDate = d.lastResetDate ?? '';
+      lastDailyBonus = d.lastDailyBonus ?? '';
+    } catch(e) {}
+  }
+  checkAndResetDaily();
+  updateWeeklyShop();
+  renderUI();
+}
+function saveGameData() {
+  localStorage.setItem('JKT48LUCKY', JSON.stringify({ slotPoints, luckyPoints, spinCount, lossStreak, ownedCards: [...ownedCards], currentBet, todaySpinUsed, lastResetDate, lastDailyBonus }));
+}
+function getWeekNumber() {
+  const now = new Date();
+  const start = new Date(now.getFullYear(), 0, 1);
+  return Math.floor((now - start) / 86400000 / 7);
+}
+function updateWeeklyShop() {
+  const currentWeek = getWeekNumber();
+  const savedWeek = localStorage.getItem('JKT48LUCKY_week');
+  const savedShop = localStorage.getItem('JKT48LUCKY_shop');
+  if(savedWeek && parseInt(savedWeek)===currentWeek && savedShop) {
+    weeklyShopIds = JSON.parse(savedShop);
+  } else {
+    const rarities = ['common','rare','epic','legendary','mythic'];
+    weeklyShopIds = rarities.map(rarity => {
+      const pool = PHOTOCARDS.filter(c => c.rarity === rarity);
+      if(pool.length===0) return -1;
+      const rand = Math.floor(Math.random() * pool.length);
+      return pool[rand].id;
+    });
+    localStorage.setItem('JKT48LUCKY_week', currentWeek);
+    localStorage.setItem('JKT48LUCKY_shop', JSON.stringify(weeklyShopIds));
+  }
+}
+
+function claimDailyBonus() {
+  const today = new Date().toDateString();
+  if(lastDailyBonus === today) { showNotif('Bonus hari ini sudah diambil! Kembali besok.'); return; }
+  slotPoints += 500;
+  lastDailyBonus = today;
+  saveGameData();
+  renderUI();
+  showNotif('🎁 +500 POINTS (Bonus Harian)!');
+}
+function emergencyReset() {
+  if(luckyPoints > 0) { showNotif('Kamu sudah memiliki JKT48 LUCKY POINTS, reset darurat tidak dapat digunakan.'); return; }
+  if(confirm('⚠️ RESET DARURAT: POINTS dan SPIN akan direset, tapi KOLEKSI PHOTOCARD TETAP ADA. Lanjutkan?')) {
+    slotPoints = 1000;
+    spinCount = 0;
+    lossStreak = 0;
+    todaySpinUsed = 0;
+    lastResetDate = '';
+    saveGameData();
+    checkAndResetDaily();
+    renderUI();
+    initReels();
+    showNotif('Reset darurat berhasil! Points & spin direset, koleksi tetap ✨');
+  }
+}
+function buySlotPoints() {
+  let amount = parseInt(document.getElementById('convertAmount').value);
+  if(isNaN(amount) || amount <= 0) { showNotif('Masukkan angka positif!'); return; }
+  if(amount > luckyPoints) { showNotif(`JKT48 LUCKY POINTS tidak cukup! Kamu hanya punya ${luckyPoints.toLocaleString()}`); return; }
+  luckyPoints -= amount;
+  slotPoints += amount;
+  saveGameData();
+  renderUI();
+  showNotif(`✨ Berhasil menukar ${amount.toLocaleString()} JKT48 LUCKY POINTS → ${amount.toLocaleString()} POINTS ✨`);
+}
+
+function renderUI() {
+  document.getElementById('slotPointsDisplay').innerText = slotPoints.toLocaleString();
+  document.getElementById('luckyPointsDisplay').innerText = luckyPoints.toLocaleString();
+  document.getElementById('spinCount').innerText = spinCount;
+  document.getElementById('lossStreak').innerText = lossStreak;
+  document.getElementById('collectedStat').innerText = `${ownedCards.size}/44`;
+  const remain = getRemainingSpins();
+  const limit = getDailyLimit();
+  const dailyText = isFinite(limit) ? `${remain}/${limit}` : 'UNLIMITED';
+  document.getElementById('dailyRemain').innerHTML = dailyText;
+  const pityPercent = Math.min((lossStreak/PITY_MAX)*100,100);
+  document.getElementById('pityFill').style.width = pityPercent+'%';
+  document.getElementById('pityLabel').innerText = lossStreak;
+  
+  const betContainer = document.getElementById('betOptions');
+  if(betContainer.children.length===0){
+    [50,100,200,500].forEach(b=>{
+      const btn=document.createElement('button');
+      btn.className='bet-btn'+(currentBet===b?' active':'');
+      btn.innerText=b;
+      btn.onclick=()=>{document.querySelectorAll('.bet-btn').forEach(bb=>bb.classList.remove('active'));btn.classList.add('active');currentBet=b;saveGameData();};
+      betContainer.appendChild(btn);
+    });
+  } else {
+    document.querySelectorAll('.bet-btn').forEach(btn=>{
+      if(parseInt(btn.innerText)===currentBet) btn.classList.add('active');
+      else btn.classList.remove('active');
+    });
+  }
+  renderShop();
+  renderAlbum();
+  const resetBtn = document.getElementById('resetGameBtn');
+  if(ownedCards.size === 44) resetBtn.disabled = false;
+  else resetBtn.disabled = true;
+  
+  const container = document.getElementById('emergencyResetContainer');
+  if (luckyPoints === 0) {
+    container.innerHTML = `<button class="bonus-btn reset-emergency" onclick="emergencyReset()">⚠️ RESET DARURAT</button>`;
+  } else {
+    container.innerHTML = '';
+  }
+}
+
+function renderShop() {
+  const grid = document.getElementById('shopGrid');
+  grid.innerHTML = '';
+  for(let cardId of weeklyShopIds) {
+    if(cardId===-1) continue;
+    const pc = PHOTOCARDS.find(c=>c.id===cardId);
+    if(!pc) continue;
+    const owned = ownedCards.has(pc.id);
+    const bgClass = `${pc.rarity}-bg`;
+    const div = document.createElement('div');
+    div.className = `photocard-item ${bgClass}` + (owned ? ' owned' : '');
+    div.innerHTML = `<div class="pc-img-wrap"><img src="${pc.img}" alt="${pc.name}" onerror="this.parentElement.innerHTML='<span class=\\'no-img\\'>🎴</span>'"></div>
+      <span class="pc-rarity rarity-${pc.rarity}">${pc.rarity.toUpperCase()}</span>
+      <span class="pc-name">${pc.name}</span>
+      <span class="pc-cost">✨ ${pc.cost.toLocaleString()}</span>`;
+    if(!owned && luckyPoints >= pc.cost) {
+      const btn = document.createElement('button'); btn.className='redeem-btn'; btn.innerText='REDEEM'; btn.onclick=()=>redeemCard(pc.id);
+      div.appendChild(btn);
+    } else if(owned) {
+      const span = document.createElement('span'); span.className='owned-badge'; span.innerText='✓ OWNED'; div.appendChild(span);
+    } else {
+      const span = document.createElement('span'); span.className='owned-badge'; span.innerText='✨ Kurang Point'; div.appendChild(span);
+    }
+    grid.appendChild(div);
+  }
+}
+function renderAlbum() {
+  const grid = document.getElementById('albumGrid');
+  grid.innerHTML = '';
+  PHOTOCARDS.forEach(pc=>{
+    const owned = ownedCards.has(pc.id);
+    const bgClass = `${pc.rarity}-bg`;
+    const div = document.createElement('div');
+    div.className = `photocard-item ${bgClass}` + (owned ? ' owned' : '');
+    div.innerHTML = `<div class="pc-img-wrap"><img src="${pc.img}" alt="${pc.name}" onerror="this.parentElement.innerHTML='<span class=\\'no-img\\'>🎴</span>'"></div>
+      <span class="pc-rarity rarity-${pc.rarity}">${pc.rarity.toUpperCase()}</span>
+      <span class="pc-name">${pc.name}</span>${owned ? '<span class="owned-badge">★ KOLEKSI</span>' : '<span class="owned-badge" style="opacity:0.5;">?</span>'}`;
+    grid.appendChild(div);
+  });
+}
+function redeemCard(cardId) {
+  const pc = PHOTOCARDS.find(c=>c.id===cardId);
+  if(!pc || ownedCards.has(cardId)) return;
+  if(luckyPoints < pc.cost) { showNotif(`JKT48 LUCKY POINTS kurang! butuh ${pc.cost.toLocaleString()} ✨`); return; }
+  luckyPoints -= pc.cost;
+  ownedCards.add(cardId);
+  saveGameData();
+  renderUI();
+  showNotif(`🎉 Mendapat ${pc.name} !`);
+  if(ownedCards.size===44) showNotif('✨ SELAMAT! Album lengkap! Tekan RESET GAME (album penuh) untuk memulai baru ✨');
+}
+
+// ========== SLOT MACHINE FUNCTIONS ==========
+function buildReelContent(inner){
+  inner.innerHTML='';
+  const pool=[...Array(7).fill(SLOT_SYMBOLS[0]),...Array(2).fill(SLOT_SYMBOLS[1]),...Array(1).fill(SLOT_SYMBOLS[2])].sort(()=>Math.random()-.5);
+  pool.forEach(sym=>{
+    const item=document.createElement('div'); item.className='reel-item';
+    const img=document.createElement('img'); img.src=sym.img; img.alt=sym.label;
+    img.onerror=function(){this.outerHTML=`<span class="emoji-fallback">${['⭐','💎','👑'][sym.id]}</span>`;};
+    item.appendChild(img); inner.appendChild(item);
+  });
+}
+function setReelResult(inner,centerSym){
+  inner.innerHTML='';
+  const ci=SLOT_SYMBOLS.findIndex(s=>s.id===centerSym.id);
+  [-1,0,1].forEach(off=>{
+    const idx=((ci+off)+SLOT_SYMBOLS.length)%SLOT_SYMBOLS.length;
+    const s=SLOT_SYMBOLS[idx];
+    const item=document.createElement('div'); item.className='reel-item';
+    const img=document.createElement('img'); img.src=s.img;
+    img.onerror=function(){this.outerHTML=`<span class="emoji-fallback">${['⭐','💎','👑'][s.id]}</span>`;};
+    item.appendChild(img); inner.appendChild(item);
+  });
+  // Tambah animasi pop untuk setiap item
+  const items = inner.querySelectorAll('.reel-item');
+  items.forEach(item => {
+    item.classList.add('new-image');
+    setTimeout(() => item.classList.remove('new-image'), 300);
+  });
+}
+function initReels(){
+  for(let i=0;i<3;i++) buildReelContent(document.getElementById(`reel${i}inner`));
+}
+function getOutcome(){
+  if(lossStreak>=PITY_MAX) return 'jackpot';
+  const bonus_j=Math.min(lossStreak*0.00015,0.01);
+  const bonus_m=Math.min(Math.floor(spinCount/200)*0.005,0.03);
+  const jChance=0.008+bonus_j;
+  const mChance=0.06+bonus_m;
+  const r=Math.random();
+  if(r<jChance) return 'jackpot';
+  if(r<jChance+mChance) return 'match2';
+  return 'lose';
+}
+function showWinOverlay(pts,sym,title){
+  document.getElementById('winPts').innerText='+'+pts.toLocaleString();
+  document.getElementById('winTitle').innerText=title;
+  const v=document.getElementById('winVisual'); v.innerHTML='';
+  const img=document.createElement('img'); img.src=sym.img; img.className='win-img';
+  img.onerror=function(){this.outerHTML=`<span style="font-size:48px">${['⭐','💎','👑'][sym.id]}</span>`;};
+  v.appendChild(img);
+  document.getElementById('winOverlay').classList.add('show');
+}
+function closeWin(){ document.getElementById('winOverlay').classList.remove('show'); }
+function spawnConfetti(){
+  const colors=['#D4AF37','#F5D76E','#6B0000','#CC0000','#FFD700'];
+  for(let i=0;i<50;i++) setTimeout(()=>{
+    const p=document.createElement('div'); p.className='confetti-piece';
+    p.style.left=Math.random()*100+'vw'; p.style.top='-20px';
+    p.style.background=colors[Math.floor(Math.random()*colors.length)];
+    p.style.borderRadius=Math.random()>.5?'50%':'0';
+    p.style.animationDuration=(1.5+Math.random()*2)+'s';
+    document.body.appendChild(p); setTimeout(()=>p.remove(),3500);
+  },i*40);
+}
+async function spin(){
+  if(isSpinning) return;
+  if(slotPoints<currentBet){ showNotif('POINTS tidak cukup! Gunakan Bonus Harian atau Reset Darurat jika tersedia.'); return; }
+  const remain = getRemainingSpins();
+  if(remain === 0) { showNotif(`Hari ini sudah mencapai limit spin! Coba besok lagi.`); return; }
+  isSpinning=true;
+  slotPoints-=currentBet;
+  spinCount++;
+  todaySpinUsed++;
+  saveGameData();
+  updateUIStats();
+  document.getElementById('spinBtn').disabled=true;
+  document.getElementById('statusMsg').innerText='✦ Berputar... ✦';
+  const outcome=getOutcome();
+  let r;
+  if(outcome==='jackpot'){
+    const s=Math.floor(Math.random()*SLOT_SYMBOLS.length);
+    r=[s,s,s];
+  } else if(outcome==='match2'){
+    const s=Math.floor(Math.random()*SLOT_SYMBOLS.length);
+    let d=Math.floor(Math.random()*SLOT_SYMBOLS.length);
+    while(d===s) d=Math.floor(Math.random()*SLOT_SYMBOLS.length);
+    r=Math.random()<.5?[s,s,d]:[d,s,s];
+  } else {
+    let a=Math.floor(Math.random()*SLOT_SYMBOLS.length);
+    let b,c;
+    if(Math.random()<.6){
+      b=Math.floor(Math.random()*SLOT_SYMBOLS.length);
+      while(b===a) b=Math.floor(Math.random()*SLOT_SYMBOLS.length);
+      c=a;
+    } else {
+      b=Math.floor(Math.random()*SLOT_SYMBOLS.length);
+      c=Math.floor(Math.random()*SLOT_SYMBOLS.length);
+      if(a===b&&b===c) c=(c+1)%SLOT_SYMBOLS.length;
+      if(a===b) b=(b+1)%SLOT_SYMBOLS.length;
+      if(b===c) c=(c+1)%SLOT_SYMBOLS.length;
+    }
+    r=[a,b,c];
+  }
+  for(let i=0;i<3;i++){
+    const el=document.getElementById(`reel${i}`);
+    const inner=document.getElementById(`reel${i}inner`);
+    el.classList.add('spinning');
+    buildReelContent(inner);
+    setTimeout(()=>{
+      el.classList.remove('spinning');
+      setReelResult(inner,SLOT_SYMBOLS[r[i]]);
+      if(i===2) setTimeout(()=>{
+        evaluateResult(r,outcome);
+        const container = document.getElementById('reelsContainer');
+        container.classList.add('shake');
+        setTimeout(() => container.classList.remove('shake'), 600);
+      },200);
+    },[1400,2300,3300][i]);
+  }
+}
+function evaluateResult(r,outcome){
+  let wonSlot=0, wonLucky=0, msg='';
+  const container=document.getElementById('reelsContainer');
+  if(outcome==='jackpot'){
+    const s=SLOT_SYMBOLS[r[0]];
+    wonSlot=Math.round(currentBet*s.multiplier*3);
+    wonLucky=wonSlot;
+    msg=`✦ JACKPOT! ${s.label} ×3 — +${wonSlot} POINTS & JKT48 LUCKY POINTS ✦`;
+    container.classList.add('winning');
+    showWinOverlay(wonSlot,s,'JACKPOT!');
+    spawnConfetti();
+    lossStreak=0;
+  } else if(outcome==='match2'){
+    const s=(r[0]===r[1])?SLOT_SYMBOLS[r[0]]:SLOT_SYMBOLS[r[1]];
+    wonSlot=Math.round(currentBet*s.multiplier);
+    wonLucky=wonSlot;
+    msg=`◆ MATCH! ${s.label} ×2 — +${wonSlot} POINTS & JKT48 LUCKY POINTS ◆`;
+    container.classList.add('winning');
+    showWinOverlay(wonSlot,s,'MATCH!');
+    lossStreak++;
+  } else {
+    msg='✦ Tidak beruntung... coba lagi ✦';
+    lossStreak++;
+  }
+  if(wonSlot>0){
+    slotPoints+=wonSlot;
+    luckyPoints+=wonLucky;
+  }
+  saveGameData();
+  updateUIStats();
+  document.getElementById('statusMsg').innerText=msg;
+  document.getElementById('spinBtn').disabled=false;
+  isSpinning=false;
+  renderUI();
+  setTimeout(()=>container.classList.remove('winning'),800);
+}
+function updateUIStats(){
+  document.getElementById('slotPointsDisplay').innerText = slotPoints.toLocaleString();
+  document.getElementById('luckyPointsDisplay').innerText = luckyPoints.toLocaleString();
+  document.getElementById('spinCount').innerText = spinCount;
+  document.getElementById('lossStreak').innerText = lossStreak;
+  const pityPercent=Math.min((lossStreak/PITY_MAX)*100,100);
+  document.getElementById('pityFill').style.width=pityPercent+'%';
+  document.getElementById('pityLabel').innerText=lossStreak;
+  const remain = getRemainingSpins();
+  const limit = getDailyLimit();
+  const dailyText = isFinite(limit) ? `${remain}/${limit}` : 'UNLIMITED';
+  document.getElementById('dailyRemain').innerHTML = dailyText;
+}
+function showNotif(msg){
+  const n=document.getElementById('notif'); n.innerText=msg; n.classList.add('show');
+  setTimeout(()=>n.classList.remove('show'),2800);
+}
+function resetFullGame(){
+  if(ownedCards.size!==44){ showNotif('Album belum penuh!'); return; }
+  if(confirm('RESET GAME: semua koleksi dan point akan dihapus. Lanjutkan?')){
+    slotPoints=1000; luckyPoints=0; spinCount=0; lossStreak=0; ownedCards.clear();
+    todaySpinUsed=0; lastResetDate=''; lastDailyBonus='';
+    currentBet=50;
+    saveGameData();
+    checkAndResetDaily();
+    updateWeeklyShop();
+    renderUI();
+    initReels();
+    showNotif('Game direset total! Mulai baru ✨');
+  }
+}
+
+loadGameData();
+initReels();
+renderUI();
+</script>
+</body>
+</html>
