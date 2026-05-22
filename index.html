@@ -6,7 +6,6 @@
 <title>JKT48 LUCKY</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <style>
-  /* ========== SAME CSS AS BEFORE, PLUS NEW ANIMATIONS ========== */
   :root {
     --maroon: #6B0000; --maroon-deep: #3D0000;
     --gold: #D4AF37; --gold-light: #F5D76E; --gold-dark: #A07800;
@@ -83,32 +82,12 @@
   .win-line { position:absolute; left:0; right:0; top:50%; transform:translateY(-50%); height:2px; background:linear-gradient(90deg,transparent,var(--gold),var(--gold-light),var(--gold),transparent); z-index:4; opacity:.6; pointer-events:none; }
   @keyframes winGlow { 0%,100%{box-shadow:inset 0 4px 20px rgba(0,0,0,.8)} 50%{box-shadow:inset 0 4px 20px rgba(0,0,0,.8),0 0 35px rgba(212,175,55,.7)} }
   .reels-container.winning { animation:winGlow .5s ease-in-out 5; }
-  @keyframes shakeReel {
-    0% { transform: translateX(0); }
-    25% { transform: translateX(-3px); }
-    75% { transform: translateX(3px); }
-    100% { transform: translateX(0); }
-  }
+  @keyframes shakeReel { 0% { transform: translateX(0); } 25% { transform: translateX(-3px); } 75% { transform: translateX(3px); } 100% { transform: translateX(0); } }
   .reels-container.shake { animation: shakeReel 0.2s ease-in-out 2; }
-
-  /* Animasi blink untuk spin */
-  @keyframes spinBlink {
-    0% { opacity: 1; }
-    50% { opacity: 0.5; }
-    100% { opacity: 1; }
-  }
-  .reel.spinning .reel-item {
-    animation: spinBlink 0.1s infinite;
-  }
-  /* Animasi fade+scale untuk gambar baru */
-  @keyframes imagePop {
-    0% { transform: scale(0.8); opacity: 0; }
-    80% { transform: scale(1.05); }
-    100% { transform: scale(1); opacity: 1; }
-  }
-  .reel-item.new-image {
-    animation: imagePop 0.2s ease-out;
-  }
+  @keyframes spinBlink { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+  .reel.spinning .reel-item { animation: spinBlink 0.1s infinite; }
+  @keyframes imagePop { 0% { transform: scale(0.8); opacity: 0; } 80% { transform: scale(1.05); } 100% { transform: scale(1); opacity: 1; } }
+  .reel-item.new-image { animation: imagePop 0.2s ease-out; }
 
   .slot-controls { display:flex; align-items:center; gap:10px; }
   .bet-selector { flex:1; background:rgba(0,0,0,.4); border:1px solid var(--gold-dark); border-radius:10px; padding:10px; }
@@ -119,12 +98,20 @@
   .spin-btn:disabled { opacity:.6; cursor:not-allowed; transform:none; }
   .status-msg { text-align:center; font-family:'Playfair Display',serif; font-style:italic; font-size:14px; color:var(--gold); min-height:22px; margin-top:12px; }
 
+  /* Warna emas untuk tulisan BET */
+  .bet-label {
+    color: #D4AF37;
+    font-size: 9px;
+    letter-spacing: 2px;
+    margin-bottom: 4px;
+  }
+
   .section-box { background:linear-gradient(135deg,var(--maroon-deep),#0a0000); border:1px solid var(--gold-dark); border-radius:16px; padding:16px; margin-bottom:14px; }
   .section-title { font-family:'Cinzel Decorative',serif; font-size:11px; letter-spacing:3px; color:var(--gold); text-align:center; margin-bottom:12px; }
   .reset-btn { background:linear-gradient(180deg,var(--gold-light),var(--gold-dark)); border:none; border-radius:30px; color:var(--black); font-family:'Cinzel',serif; font-size:12px; font-weight:bold; padding:8px 16px; cursor:pointer; margin-top:10px; width:100%; transition:0.2s; }
   .reset-btn:disabled { opacity:0.4; cursor:not-allowed; }
 
-  /* ===== PHOTOCARD STYLES (same as before) ===== */
+  /* ===== PHOTOCARD STYLES ===== */
   .photocards-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; max-height:500px; overflow-y:auto; }
   .photocard-item { border-radius:10px; padding:8px; text-align:center; transition:all 0.2s ease; position:relative; overflow:hidden; }
   .photocard-item.owned { filter: brightness(1.05) saturate(1.1); box-shadow: 0 0 6px currentColor; }
@@ -175,16 +162,17 @@
   .modal-content p { font-size: 13px; line-height: 1.5; margin-bottom: 20px; text-align: left; }
   .modal-content button { background: linear-gradient(180deg, var(--gold-light), var(--gold-dark)); border: none; border-radius: 30px; padding: 8px 20px; font-weight: bold; cursor: pointer; }
 
-  /* Watermark */
   .watermark { text-align: center; font-size: 9px; color: rgba(212,175,55,0.4); margin-top: 12px; letter-spacing: 1px; font-style: italic; }
 
+  /* POPUP WIN OVERLAY - tanpa gambar */
   .win-overlay { position:fixed; inset:0; background:rgba(0,0,0,.88); z-index:500; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity .3s; }
   .win-overlay.show { opacity:1; pointer-events:all; }
   .win-card { background:linear-gradient(160deg,var(--maroon),var(--maroon-deep)); border:2px solid var(--gold); border-radius:20px; padding:30px 40px; text-align:center; max-width:300px; }
-  .win-img { width:80px; height:80px; object-fit:cover; border-radius:50%; border:3px solid var(--gold); margin-bottom:12px; pointer-events: none; }
-  .win-title { font-family:'Cinzel Decorative',serif; font-size:20px; background:linear-gradient(180deg,var(--gold-light),var(--gold)); -webkit-background-clip:text; background-clip:text; color:transparent; }
-  .win-pts { font-size:36px; color:var(--gold-light); font-weight:900; }
+  .win-img { display: none; }
+  .win-title { font-family:'Cinzel Decorative',serif; font-size:24px; background:linear-gradient(180deg,var(--gold-light),var(--gold)); -webkit-background-clip:text; background-clip:text; color:transparent; margin-bottom:10px; }
+  .win-pts { font-size:36px; color:var(--gold-light); font-weight:900; margin-bottom:10px; }
   .win-close-btn { background:linear-gradient(180deg,var(--gold-light),var(--gold-dark)); border:none; border-radius:10px; color:var(--black); font-weight:bold; padding:10px 28px; margin-top:12px; cursor:pointer; }
+
   .notif { position:fixed; top:20px; left:50%; transform:translateX(-50%) translateY(-100px); background:var(--maroon-deep); border:1px solid var(--gold); border-radius:12px; padding:12px 24px; color:var(--gold); z-index:999; transition:transform .4s; white-space:nowrap; }
   .notif.show { transform:translateX(-50%) translateY(0); }
   @keyframes confettiFall { 0%{transform:translateY(-20px) rotate(0deg);opacity:1} 100%{transform:translateY(100vh) rotate(720deg);opacity:0} }
@@ -203,12 +191,13 @@
   <div class="modal-content">
     <h3>✦ Cara Bermain ✦</h3>
     <p>🎰 Pilih BET, tekan SPIN.<br>
-    🎉 2 simbol sama → menang POINTS & LUCKY POINTS.<br>
+    🎉 2 simbol sama → menang POINTS & JKT48 LUCKY POINTS.<br>
     💥 3 simbol sama (JACKPOT) → menang besar.<br>
     🛍️ Tukar LUCKY POINTS dengan Photocard di ROTATING SHOP.<br>
     📸 Kumpulkan 44 Photocard → tombol RESET GAME (Album Penuh) aktif.<br>
-    🔴 Reset Darurat: muncul hanya jika LUCKY POINTS = 0, pakai SEKALI, reset POINTS & spin, koleksi tetap.<br><br>
-    ⚠️ peringatan : Game santai untuk mengisi waktu kosong. Nikmati dengan bijak!</p>
+    🔴 Reset Darurat: muncul hanya jika LUCKY POINTS = 0, pakai SEKALI, reset POINTS & spin, koleksi tetap.<br>
+    🗓️ Batasan spin: hari ganjil dibatasi 17x, hari genap UNLIMITED.<br>
+    ⚠️ Game santai untuk mengisi waktu kosong. Nikmati dengan bijak!</p>
     <button onclick="closeModal()">Tutup</button>
   </div>
 </div>
@@ -276,7 +265,7 @@
 </div>
 
 <script>
-// ========== ANTI COPY (tidak blokir inspect) ==========
+// ========== ANTI COPY ==========
 document.addEventListener('contextmenu', function(e) { e.preventDefault(); return false; });
 document.addEventListener('copy', function(e) { e.preventDefault(); });
 document.addEventListener('cut', function(e) { e.preventDefault(); });
@@ -303,6 +292,7 @@ const SLOT_SYMBOLS = [
 ];
 
 // ========== PHOTOCARD 44 MEMBER ==========
+// Ganti nama file sesuai dengan gambar yang Anda miliki
 const commonFiles = [ "Trisha.png", "Lana.png", "Nayla.png", "Gendis.png", "Anin.png", "Cynthia.png", "Erin.png", "Aralie.png", "Raisha.png" ];
 const rareFiles = [ "Ribka.png", "Oline.png", "Nala.png", "Nachia.png", "Lily.png", "Lia.png", "Fritzy.png", "Elin.png", "Cathy.png", "Delynn.png" ];
 const epicFiles = [ "Lyn", "Alya.png", "Anin.png", "Chelsea.png", "Dena.png", "Desy.png", "Ella.png", "Gracie.png", "Greesel.png", "Lia.png" ];
@@ -330,11 +320,22 @@ let slotPoints = 1000, luckyPoints = 0, spinCount = 0, lossStreak = 0;
 let ownedCards = new Set();
 let currentBet = 50, isSpinning = false;
 let todaySpinUsed = 0, lastResetDate = '', weeklyShopIds = [], lastDailyBonus = '';
+let emergencyUsed = false;   // reset darurat hanya sekali
 const PITY_MAX = 200;
 
-function isTodayLimited() { return (Math.floor(Date.now() / 86400000) % 2 === 0); }
-function getDailyLimit() { return isTodayLimited() ? 17 : Infinity; }
-function getRemainingSpins() { const limit = getDailyLimit(); return isFinite(limit) ? Math.max(0, limit - todaySpinUsed) : Infinity; }
+// ========== DAILY LIMIT (ganjil = batasan 17, genap = unlimited) ==========
+function isTodayLimited() {
+  const daysSinceEpoch = Math.floor(Date.now() / 86400000);
+  return daysSinceEpoch % 2 === 1;
+}
+function getDailyLimit() {
+  return isTodayLimited() ? 17 : Infinity;
+}
+function getRemainingSpins() {
+  const limit = getDailyLimit();
+  if (!isFinite(limit)) return Infinity;
+  return Math.max(0, limit - todaySpinUsed);
+}
 function checkAndResetDaily() {
   const today = new Date().toDateString();
   if (lastResetDate !== today) { todaySpinUsed = 0; lastResetDate = today; saveGameData(); }
@@ -354,6 +355,7 @@ function loadGameData() {
       todaySpinUsed = d.todaySpinUsed ?? 0;
       lastResetDate = d.lastResetDate ?? '';
       lastDailyBonus = d.lastDailyBonus ?? '';
+      emergencyUsed = d.emergencyUsed ?? false;
     } catch(e) {}
   }
   checkAndResetDaily();
@@ -361,7 +363,7 @@ function loadGameData() {
   renderUI();
 }
 function saveGameData() {
-  localStorage.setItem('JKT48LUCKY', JSON.stringify({ slotPoints, luckyPoints, spinCount, lossStreak, ownedCards: [...ownedCards], currentBet, todaySpinUsed, lastResetDate, lastDailyBonus }));
+  localStorage.setItem('JKT48LUCKY', JSON.stringify({ slotPoints, luckyPoints, spinCount, lossStreak, ownedCards: [...ownedCards], currentBet, todaySpinUsed, lastResetDate, lastDailyBonus, emergencyUsed }));
 }
 function getWeekNumber() {
   const now = new Date();
@@ -397,13 +399,15 @@ function claimDailyBonus() {
   showNotif('🎁 +500 POINTS (Bonus Harian)!');
 }
 function emergencyReset() {
+  if(emergencyUsed) { showNotif('Reset darurat sudah pernah digunakan!'); return; }
   if(luckyPoints > 0) { showNotif('Kamu sudah memiliki JKT48 LUCKY POINTS, reset darurat tidak dapat digunakan.'); return; }
-  if(confirm('⚠️ RESET DARURAT: POINTS dan SPIN akan direset, tapi KOLEKSI PHOTOCARD TETAP ADA. Lanjutkan?')) {
+  if(confirm('⚠️ RESET DARURAT (SEKALI): POINTS dan SPIN akan direset, tapi KOLEKSI PHOTOCARD TETAP ADA. Lanjutkan?')) {
     slotPoints = 1000;
     spinCount = 0;
     lossStreak = 0;
     todaySpinUsed = 0;
     lastResetDate = '';
+    emergencyUsed = true;
     saveGameData();
     checkAndResetDaily();
     renderUI();
@@ -458,7 +462,7 @@ function renderUI() {
   else resetBtn.disabled = true;
   
   const container = document.getElementById('emergencyResetContainer');
-  if (luckyPoints === 0) {
+  if (!emergencyUsed && luckyPoints === 0) {
     container.innerHTML = `<button class="bonus-btn reset-emergency" onclick="emergencyReset()">⚠️ RESET DARURAT</button>`;
   } else {
     container.innerHTML = '';
@@ -539,34 +543,26 @@ function setReelResult(inner,centerSym){
     img.onerror=function(){this.outerHTML=`<span class="emoji-fallback">${['⭐','💎','👑'][s.id]}</span>`;};
     item.appendChild(img); inner.appendChild(item);
   });
-  // Tambah animasi pop untuk setiap item
   const items = inner.querySelectorAll('.reel-item');
-  items.forEach(item => {
-    item.classList.add('new-image');
-    setTimeout(() => item.classList.remove('new-image'), 300);
-  });
+  items.forEach(item => { item.classList.add('new-image'); setTimeout(() => item.classList.remove('new-image'), 300); });
 }
 function initReels(){
   for(let i=0;i<3;i++) buildReelContent(document.getElementById(`reel${i}inner`));
 }
 function getOutcome(){
   if(lossStreak>=PITY_MAX) return 'jackpot';
-  const bonus_j=Math.min(lossStreak*0.00015,0.01);
-  const bonus_m=Math.min(Math.floor(spinCount/200)*0.005,0.03);
-  const jChance=0.008+bonus_j;
-  const mChance=0.06+bonus_m;
-  const r=Math.random();
-  if(r<jChance) return 'jackpot';
-  if(r<jChance+mChance) return 'match2';
+  const bonus_j = Math.min(lossStreak*0.00015, 0.01);
+  const jChance = 0.008 + bonus_j;   // jackpot 0.8%
+  const mChance = 0.5;               // match2 50%
+  const r = Math.random();
+  if(r < jChance) return 'jackpot';
+  if(r < jChance + mChance) return 'match2';
   return 'lose';
 }
-function showWinOverlay(pts,sym,title){
+function showWinOverlay(pts, sym, title){
   document.getElementById('winPts').innerText='+'+pts.toLocaleString();
   document.getElementById('winTitle').innerText=title;
-  const v=document.getElementById('winVisual'); v.innerHTML='';
-  const img=document.createElement('img'); img.src=sym.img; img.className='win-img';
-  img.onerror=function(){this.outerHTML=`<span style="font-size:48px">${['⭐','💎','👑'][sym.id]}</span>`;};
-  v.appendChild(img);
+  document.getElementById('winVisual').innerHTML = '';
   document.getElementById('winOverlay').classList.add('show');
 }
 function closeWin(){ document.getElementById('winOverlay').classList.remove('show'); }
@@ -605,20 +601,13 @@ async function spin(){
     while(d===s) d=Math.floor(Math.random()*SLOT_SYMBOLS.length);
     r=Math.random()<.5?[s,s,d]:[d,s,s];
   } else {
-    let a=Math.floor(Math.random()*SLOT_SYMBOLS.length);
-    let b,c;
-    if(Math.random()<.6){
-      b=Math.floor(Math.random()*SLOT_SYMBOLS.length);
-      while(b===a) b=Math.floor(Math.random()*SLOT_SYMBOLS.length);
-      c=a;
-    } else {
-      b=Math.floor(Math.random()*SLOT_SYMBOLS.length);
-      c=Math.floor(Math.random()*SLOT_SYMBOLS.length);
-      if(a===b&&b===c) c=(c+1)%SLOT_SYMBOLS.length;
-      if(a===b) b=(b+1)%SLOT_SYMBOLS.length;
-      if(b===c) c=(c+1)%SLOT_SYMBOLS.length;
-    }
-    r=[a,b,c];
+    // LOSE: semua simbol berbeda
+    let a = Math.floor(Math.random() * SLOT_SYMBOLS.length);
+    let b = Math.floor(Math.random() * SLOT_SYMBOLS.length);
+    while (b === a) b = Math.floor(Math.random() * SLOT_SYMBOLS.length);
+    let c = Math.floor(Math.random() * SLOT_SYMBOLS.length);
+    while (c === a || c === b) c = Math.floor(Math.random() * SLOT_SYMBOLS.length);
+    r = [a, b, c];
   }
   for(let i=0;i<3;i++){
     const el=document.getElementById(`reel${i}`);
@@ -694,7 +683,7 @@ function resetFullGame(){
   if(ownedCards.size!==44){ showNotif('Album belum penuh!'); return; }
   if(confirm('RESET GAME: semua koleksi dan point akan dihapus. Lanjutkan?')){
     slotPoints=1000; luckyPoints=0; spinCount=0; lossStreak=0; ownedCards.clear();
-    todaySpinUsed=0; lastResetDate=''; lastDailyBonus='';
+    todaySpinUsed=0; lastResetDate=''; lastDailyBonus=''; emergencyUsed=false;
     currentBet=50;
     saveGameData();
     checkAndResetDaily();
