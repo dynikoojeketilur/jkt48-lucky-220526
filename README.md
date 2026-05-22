@@ -1,4 +1,4 @@
-# JKT48 Lucky Slots 🎰
+# JKT48 Lucky  🎰
 
 ## Cara Ganti Gambar
 
