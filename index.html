@@ -98,73 +98,293 @@
   .spin-btn:disabled { opacity:.6; cursor:not-allowed; transform:none; }
   .status-msg { text-align:center; font-family:'Playfair Display',serif; font-style:italic; font-size:14px; color:var(--gold); min-height:22px; margin-top:12px; }
 
-  /* Warna emas untuk tulisan BET */
-  .bet-label {
-    color: #D4AF37;
-    font-size: 9px;
-    letter-spacing: 2px;
-    margin-bottom: 4px;
-  }
-
+  .bet-label { color: #D4AF37; font-size: 9px; letter-spacing: 2px; margin-bottom: 4px; }
   .section-box { background:linear-gradient(135deg,var(--maroon-deep),#0a0000); border:1px solid var(--gold-dark); border-radius:16px; padding:16px; margin-bottom:14px; }
   .section-title { font-family:'Cinzel Decorative',serif; font-size:11px; letter-spacing:3px; color:var(--gold); text-align:center; margin-bottom:12px; }
   .reset-btn { background:linear-gradient(180deg,var(--gold-light),var(--gold-dark)); border:none; border-radius:30px; color:var(--black); font-family:'Cinzel',serif; font-size:12px; font-weight:bold; padding:8px 16px; cursor:pointer; margin-top:10px; width:100%; transition:0.2s; }
   .reset-btn:disabled { opacity:0.4; cursor:not-allowed; }
 
   /* ===== PHOTOCARD STYLES ===== */
-  .photocards-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; max-height:500px; overflow-y:auto; }
-  .photocard-item { border-radius:10px; padding:8px; text-align:center; transition:all 0.2s ease; position:relative; overflow:hidden; }
-  .photocard-item.owned { filter: brightness(1.05) saturate(1.1); box-shadow: 0 0 6px currentColor; }
-  #albumGrid .photocard-item:not(.owned) .pc-img-wrap img { filter: brightness(0.6) saturate(0.5) grayscale(0.3); }
-  #shopGrid .photocard-item .pc-img-wrap img { filter: none; }
+  .photocards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    max-height: 500px;
+    overflow-y: auto;
+  }
+  .photocard-item {
+    border-radius: 8px;
+    padding: 4px;
+    text-align: center;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .photocard-item.owned {
+    filter: brightness(1.05) saturate(1.1);
+    box-shadow: 0 0 6px currentColor;
+  }
+  /* Album: gambar sangat gelap + blur, nama tidak tampil */
+  #albumGrid .pc-img-wrap img {
+    filter: blur(8px) brightness(0.3) saturate(0.2);
+  }
+  #albumGrid .pc-name {
+    display: none;
+  }
+  /* Shop: tetap jelas, nama tampil */
+  #shopGrid .pc-name {
+    display: block;
+  }
+  #shopGrid .pc-img-wrap img {
+    filter: none;
+  }
+
   .common-bg { background:linear-gradient(135deg, #1a1a1a, #2a2a2a); border:1px solid rgba(156,156,156,0.3); }
-  .rare-bg { background:linear-gradient(135deg, #0a1628, #0d2d4a); border:1px solid #4FC3F7; animation: rareGentlePulse 3s infinite ease-in-out; }
-  @keyframes rareGentlePulse { 0% { border-color: #4FC3F7; box-shadow: 0 0 0 0 rgba(79,195,247,0.2); } 50% { border-color: #7fd6ff; box-shadow: 0 0 0 4px rgba(79,195,247,0.1); } 100% { border-color: #4FC3F7; box-shadow: 0 0 0 0 rgba(79,195,247,0); } }
-  .epic-bg { background:linear-gradient(135deg, #1a0a2e, #2d1054); border:1px solid #CE93D8; animation: epicGlow 2.5s infinite alternate; box-shadow: inset 0 0 5px rgba(206,147,216,0); }
-  @keyframes epicGlow { 0% { border-color: #b77dc6; box-shadow: inset 0 0 2px rgba(206,147,216,0.2), 0 0 2px rgba(206,147,216,0.1); } 100% { border-color: #e8b0ff; box-shadow: inset 0 0 8px rgba(206,147,216,0.6), 0 0 6px rgba(206,147,216,0.3); } }
-  .legendary-bg { background:linear-gradient(135deg, #1a1000, #2a2000); border:1px solid var(--gold-light); position:relative; background-size: 200% 100%; animation: shimmer 3s infinite linear; }
-  @keyframes shimmer { 0% { background-position: 100% 0; } 100% { background-position: -100% 0; } }
-  .legendary-bg::after { content:''; position:absolute; top:0; left:0; right:0; bottom:0; background:linear-gradient(90deg, transparent, rgba(212,175,55,0.15), transparent); background-size: 200% 100%; animation: shimmer 3s infinite linear; pointer-events:none; }
-  .mythic-bg { background:linear-gradient(135deg, #1a0a1a, #3d0a2a); border:1px solid #FF6B6B; animation: mythicPulse 1.5s infinite ease-in-out; position:relative; }
-  @keyframes mythicPulse { 0% { box-shadow:0 0 0 0 rgba(255,107,107,0.4); border-color:#FF6B6B; } 70% { box-shadow:0 0 0 5px rgba(255,107,107,0); border-color:#ff9999; } 100% { box-shadow:0 0 0 0 rgba(255,107,107,0); border-color:#FF6B6B; } }
-  .pc-img-wrap { width:70px; height:90px; margin:0 auto 6px; border-radius:6px; overflow:hidden; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.3); position: relative; }
-  .common-bg .pc-img-wrap { border:2px solid #9E9E9E; }
-  .rare-bg .pc-img-wrap { border:2px solid #4FC3F7; }
-  .epic-bg .pc-img-wrap { border:2px solid #CE93D8; }
-  .legendary-bg .pc-img-wrap { border:2px solid var(--gold-light); }
-  .mythic-bg .pc-img-wrap { border:2px solid #FF6B6B; }
-  .pc-img-wrap::after { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent); transform: skewX(-20deg); animation: shineOverlay 5s infinite ease-in-out; pointer-events: none; z-index: 2; }
-  @keyframes shineOverlay { 0% { left: -100%; } 20% { left: 120%; } 100% { left: 120%; } }
-  .pc-img-wrap img { width:100%; height:100%; object-fit:cover; mix-blend-mode: normal; background: transparent; position: relative; z-index: 1; }
-  .pc-img-wrap .no-img { display:block; width:100%; text-align:center; color:var(--gold); }
-  .pc-rarity { font-size:7px; letter-spacing:1px; display:block; margin-bottom:2px; }
+  .rare-bg {
+    background: linear-gradient(135deg, #0a1628, #0d2d4a);
+    border: 1px solid #4FC3F7;
+    animation: rareGentlePulse 2.5s infinite ease-in-out;
+  }
+  @keyframes rareGentlePulse {
+    0% { border-color: #4FC3F7; box-shadow: 0 0 0 0 rgba(79,195,247,0.4); }
+    50% { border-color: #a0e0ff; box-shadow: 0 0 0 3px rgba(79,195,247,0.2); }
+    100% { border-color: #4FC3F7; box-shadow: 0 0 0 0 rgba(79,195,247,0); }
+  }
+  .epic-bg {
+    background: linear-gradient(135deg, #1a0a2e, #2d1054);
+    border: 1px solid #CE93D8;
+    animation: epicGlow 2s infinite alternate;
+    box-shadow: inset 0 0 5px rgba(206,147,216,0.3);
+  }
+  @keyframes epicGlow {
+    0% { border-color: #b77dc6; box-shadow: inset 0 0 2px rgba(206,147,216,0.2), 0 0 2px rgba(206,147,216,0.1); }
+    100% { border-color: #f0c0ff; box-shadow: inset 0 0 10px rgba(206,147,216,0.5), 0 0 8px rgba(206,147,216,0.3); }
+  }
+  /* Legendary dengan shimmer emas di atas gambar */
+  .legendary-bg {
+    background: linear-gradient(135deg, #1a1000, #2a2000);
+    border: 1px solid var(--gold-light);
+    position: relative;
+  }
+  .legendary-bg::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(212,175,55,0.15), transparent);
+    background-size: 200% 100%;
+    animation: shimmerBg 3s infinite linear;
+    pointer-events: none;
+    z-index: 1;
+  }
+  @keyframes shimmerBg {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+  .legendary-bg .pc-img-wrap::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,215,0,0.5), transparent);
+    transform: skewX(-20deg);
+    animation: legendShimmer 2.5s infinite ease-in-out;
+    pointer-events: none;
+    z-index: 3;
+  }
+  @keyframes legendShimmer {
+    0% { left: -100%; }
+    30% { left: 120%; }
+    100% { left: 120%; }
+  }
+
+  /* Mythic - efek lebih menarik dari Legendary */
+  .mythic-bg {
+    background: linear-gradient(135deg, #1a0a1a, #3d0a2a);
+    border: 2px solid #FF6B6B;
+    position: relative;
+    animation: mythicPulse 0.8s infinite ease-in-out;
+  }
+  @keyframes mythicPulse {
+    0% { box-shadow: 0 0 0 0 rgba(255,107,107,0.6); border-color: #FF6B6B; }
+    50% { box-shadow: 0 0 0 8px rgba(255,107,107,0.3); border-color: #ffcccc; }
+    100% { box-shadow: 0 0 0 0 rgba(255,107,107,0); border-color: #FF6B6B; }
+  }
+  .mythic-bg .pc-img-wrap::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,105,180,0.7), rgba(255,0,150,0.5), transparent);
+    transform: skewX(-15deg);
+    animation: mythicShimmer 1.2s infinite ease-in-out;
+    pointer-events: none;
+    z-index: 3;
+  }
+  @keyframes mythicShimmer {
+    0% { left: -100%; }
+    30% { left: 120%; }
+    100% { left: 120%; }
+  }
+  .mythic-bg .pc-img-wrap::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 120%;
+    height: 120%;
+    background: radial-gradient(circle, rgba(255,107,107,0.3), transparent);
+    transform: translate(-50%, -50%) scale(0.8);
+    animation: mythicGlowExpand 1s infinite alternate;
+    pointer-events: none;
+    z-index: 2;
+  }
+  @keyframes mythicGlowExpand {
+    from { transform: translate(-50%, -50%) scale(0.8); opacity: 0.5; }
+    to { transform: translate(-50%, -50%) scale(1.2); opacity: 0; }
+  }
+
+  .pc-img-wrap {
+    width: 100%;
+    aspect-ratio: 7 / 9;
+    margin: 0;
+    border-radius: 6px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.3);
+    position: relative;
+  }
+  .common-bg .pc-img-wrap { border: 2px solid #9E9E9E; }
+  .rare-bg .pc-img-wrap { border: 2px solid #4FC3F7; }
+  .epic-bg .pc-img-wrap { border: 2px solid #CE93D8; }
+  .legendary-bg .pc-img-wrap { border: 2px solid var(--gold-light); }
+  .mythic-bg .pc-img-wrap { border: 2px solid #FF6B6B; }
+
+  .pc-img-wrap::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+    transform: skewX(-20deg);
+    animation: shineOverlay 6s infinite ease-in-out;
+    pointer-events: none;
+    z-index: 2;
+  }
+  @keyframes shineOverlay {
+    0% { left: -100%; }
+    20% { left: 120%; }
+    100% { left: 120%; }
+  }
+  .pc-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    mix-blend-mode: normal;
+    background: transparent;
+    position: relative;
+    z-index: 1;
+  }
+  .pc-img-wrap .no-img {
+    display: block;
+    width: 100%;
+    text-align: center;
+    color: var(--gold);
+  }
+
+  .pc-rarity {
+    font-size: 7px;
+    letter-spacing: 1px;
+    display: block;
+    margin-top: 6px;
+    margin-bottom: 2px;
+  }
   .rarity-common { color:#9E9E9E; font-style:normal; font-weight:normal; }
   .rarity-rare { color:#4FC3F7; font-style:italic; font-weight:normal; }
   .rarity-epic { color:#CE93D8; font-style:normal; font-weight:bold; }
-  .rarity-legendary { color:var(--gold-light); font-weight:bold; text-shadow:0 0 4px rgba(212,175,55,0.5); animation: glitter 1s infinite; }
-  @keyframes glitter { 0% { text-shadow:0 0 2px var(--gold-light); } 50% { text-shadow:0 0 8px var(--gold); } 100% { text-shadow:0 0 2px var(--gold-light); } }
-  .rarity-mythic { color:#FF6B6B; font-style:italic; font-weight:bold; text-shadow:0 0 4px #FF6B6B; animation: mythicGlow 0.8s infinite alternate; }
-  @keyframes mythicGlow { from { text-shadow:0 0 2px #FF6B6B; } to { text-shadow:0 0 10px #ff3b3b; } }
-  .pc-name { font-size:8px; display:block; margin-bottom:2px; color:var(--cream); }
-  .pc-cost { font-size:10px; font-weight:700; display:block; }
-  .common-bg .pc-cost { color:#9E9E9E; }
-  .rare-bg .pc-cost { color:#4FC3F7; }
-  .epic-bg .pc-cost { color:#CE93D8; }
-  .legendary-bg .pc-cost { color:var(--gold-light); }
-  .mythic-bg .pc-cost { color:#FF6B6B; }
-  .redeem-btn { background:linear-gradient(180deg,var(--gold-light),var(--gold-dark)); border:none; border-radius:5px; color:var(--black); font-size:8px; font-weight:bold; padding:4px 6px; margin-top:4px; cursor:pointer; width:100%; }
-  .owned-badge { color:var(--gold); font-size:9px; margin-top:4px; display:block; }
+  .rarity-legendary { color:var(--gold-light); font-weight:bold; text-shadow:0 0 3px rgba(212,175,55,0.5); animation: glitter 1s infinite; }
+  @keyframes glitter { 0% { text-shadow:0 0 1px var(--gold-light); } 50% { text-shadow:0 0 6px var(--gold); } 100% { text-shadow:0 0 1px var(--gold-light); } }
+  .rarity-mythic { color:#FF6B6B; font-style:italic; font-weight:bold; text-shadow:0 0 4px #FF6B6B; animation: mythicTextGlow 0.6s infinite alternate; }
+  @keyframes mythicTextGlow { from { text-shadow:0 0 1px #FF6B6B; } to { text-shadow:0 0 12px #ff3b3b; } }
 
-  /* Modal */
+  .pc-name { font-size: 8px; display: block; margin-bottom: 2px; color: var(--cream); }
+  .pc-cost { font-size: 10px; font-weight: 700; display: block; margin-top: 2px; }
+  .common-bg .pc-cost { color: #9E9E9E; }
+  .rare-bg .pc-cost { color: #4FC3F7; }
+  .epic-bg .pc-cost { color: #CE93D8; }
+  .legendary-bg .pc-cost { color: var(--gold-light); }
+  .mythic-bg .pc-cost { color: #FF6B6B; }
+  .redeem-btn { background: linear-gradient(180deg, var(--gold-light), var(--gold-dark)); border: none; border-radius: 5px; color: var(--black); font-size: 8px; font-weight: bold; padding: 4px 6px; margin-top: 4px; cursor: pointer; width: 100%; }
+  .owned-badge { color: var(--gold); font-size: 9px; margin-top: 4px; display: block; }
+
+  /* Popup redeem */
+  .redeem-popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.9);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cinzel', serif;
+  }
+  .redeem-popup .popup-card {
+    background: linear-gradient(145deg, var(--maroon-deep), #2a0000);
+    border: 2px solid var(--gold);
+    border-radius: 20px;
+    padding: 20px;
+    text-align: center;
+    max-width: 280px;
+    animation: popIn 0.3s ease-out;
+  }
+  @keyframes popIn {
+    from { transform: scale(0.7); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+  .redeem-popup .popup-card img {
+    width: 120px;
+    height: auto;
+    border-radius: 12px;
+    border: 2px solid var(--gold);
+    margin-bottom: 10px;
+  }
+  .redeem-popup .popup-card h3 {
+    color: var(--gold-light);
+    margin-bottom: 5px;
+  }
+  .redeem-popup .popup-card p {
+    color: var(--cream);
+    margin-bottom: 15px;
+  }
+  .redeem-popup .popup-card button {
+    background: linear-gradient(180deg, var(--gold-light), var(--gold-dark));
+    border: none;
+    border-radius: 30px;
+    padding: 6px 20px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  /* Modal help, watermark, win overlay */
   .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); align-items: center; justify-content: center; }
   .modal-content { background: linear-gradient(145deg, var(--maroon-deep), #2a0000); border: 2px solid var(--gold); border-radius: 20px; padding: 25px; max-width: 350px; text-align: center; color: var(--cream); font-family: 'Cinzel', serif; box-shadow: 0 0 40px rgba(212,175,55,0.3); }
   .modal-content h3 { color: var(--gold-light); margin-bottom: 15px; }
   .modal-content p { font-size: 13px; line-height: 1.5; margin-bottom: 20px; text-align: left; }
   .modal-content button { background: linear-gradient(180deg, var(--gold-light), var(--gold-dark)); border: none; border-radius: 30px; padding: 8px 20px; font-weight: bold; cursor: pointer; }
-
   .watermark { text-align: center; font-size: 9px; color: rgba(212,175,55,0.4); margin-top: 12px; letter-spacing: 1px; font-style: italic; }
-
-  /* POPUP WIN OVERLAY - tanpa gambar */
   .win-overlay { position:fixed; inset:0; background:rgba(0,0,0,.88); z-index:500; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity .3s; }
   .win-overlay.show { opacity:1; pointer-events:all; }
   .win-card { background:linear-gradient(160deg,var(--maroon),var(--maroon-deep)); border:2px solid var(--gold); border-radius:20px; padding:30px 40px; text-align:center; max-width:300px; }
@@ -172,12 +392,30 @@
   .win-title { font-family:'Cinzel Decorative',serif; font-size:24px; background:linear-gradient(180deg,var(--gold-light),var(--gold)); -webkit-background-clip:text; background-clip:text; color:transparent; margin-bottom:10px; }
   .win-pts { font-size:36px; color:var(--gold-light); font-weight:900; margin-bottom:10px; }
   .win-close-btn { background:linear-gradient(180deg,var(--gold-light),var(--gold-dark)); border:none; border-radius:10px; color:var(--black); font-weight:bold; padding:10px 28px; margin-top:12px; cursor:pointer; }
-
-  .notif { position:fixed; top:20px; left:50%; transform:translateX(-50%) translateY(-100px); background:var(--maroon-deep); border:1px solid var(--gold); border-radius:12px; padding:12px 24px; color:var(--gold); z-index:999; transition:transform .4s; white-space:nowrap; }
-  .notif.show { transform:translateX(-50%) translateY(0); }
+  
+  .notif {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100px);
+    background: var(--maroon-deep);
+    border: 1px solid var(--gold);
+    border-radius: 12px;
+    padding: 8px 16px;
+    color: var(--gold);
+    z-index: 999;
+    transition: transform .4s;
+    white-space: normal;
+    text-align: center;
+    font-size: 12px;
+    max-width: 80%;
+    width: auto;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  }
+  .notif.show { transform: translateX(-50%) translateY(0); }
+  
   @keyframes confettiFall { 0%{transform:translateY(-20px) rotate(0deg);opacity:1} 100%{transform:translateY(100vh) rotate(720deg);opacity:0} }
   .confetti-piece { position:fixed; width:8px; height:8px; z-index:600; pointer-events:none; animation:confettiFall linear forwards; }
-
   @media (min-width: 800px) { .container { max-width: 750px; } .photocards-grid { grid-template-columns: repeat(4,1fr); } .reel-item img { width: 140px; height: 140px; } .reel { height: 160px; } }
   @media (min-width: 1100px) { .container { max-width: 950px; } .photocards-grid { grid-template-columns: repeat(5,1fr); } }
 </style>
@@ -190,15 +428,25 @@
 <div class="modal" id="helpModal">
   <div class="modal-content">
     <h3>✦ Cara Bermain ✦</h3>
-    <p>🎰 Pilih BET, tekan SPIN.<br>
-    🎉 2 simbol sama → menang POINTS & JKT48 LUCKY POINTS.<br>
-    💥 3 simbol sama (JACKPOT) → menang besar.<br>
-    🛍️ Tukar LUCKY POINTS dengan Photocard di ROTATING SHOP.<br>
-    📸 Kumpulkan 44 Photocard → tombol RESET GAME (Album Penuh) aktif.<br>
-    🔴 Reset Darurat: muncul hanya jika LUCKY POINTS = 0, pakai SEKALI, reset POINTS & spin, koleksi tetap.<br>
-    🗓️ Batasan spin: hari ganjil dibatasi 17x, hari genap UNLIMITED.<br>
-    ⚠️ Game santai untuk mengisi waktu kosong. Nikmati dengan bijak!</p>
+    <p>1. Pilih BET, tekan SPIN.<br>
+     2. 2 simbol sama → menang JKT48 LUCKY POINTS (POINTS tidak bertambah).<br>
+     3. 3 simbol sama (JACKPOT) → menang lebih besar.<br>
+     4. Tukar LUCKY POINTS dengan Photocard di ROTATING SHOP.<br>
+     5. Kumpulkan Photocard → tombol RESET GAME (Album Penuh) aktif.<br>
+     6. Reset Darurat: muncul hanya jika LUCKY POINTS = 0, pakai SEKALI, reset POINTS & spin, koleksi tetap.<br>
+     7. Batasan spin: hari ganjil dibatasi 17x, hari genap UNLIMITED.<br><br>
+     Peringatan!<br> Game santai untuk mengisi waktu kosong. Nikmati dengan bijak!</p>
     <button onclick="closeModal()">Tutup</button>
+  </div>
+</div>
+
+<!-- Popup mendapatkan photocard -->
+<div id="redeemPopup" class="redeem-popup">
+  <div class="popup-card">
+    <img id="popupImg" src="" alt="">
+    <h3 id="popupName"></h3>
+    <p>✨ Kamu mendapatkan photocard ini! ✨</p>
+    <button onclick="closeRedeemPopup()">OK</button>
   </div>
 </div>
 
@@ -210,21 +458,21 @@
   </div>
 
   <div class="points-bar-double">
-    <div class="point-card"><div class="point-label">🎰 POINTS</div><div class="point-value" id="slotPointsDisplay">1,000</div></div>
-    <div class="point-card"><div class="point-label">✨ JKT48 LUCKY POINTS</div><div class="point-value" id="luckyPointsDisplay">0</div></div>
+    <div class="point-card"><div class="point-label">POINTS</div><div class="point-value" id="slotPointsDisplay">1,000</div></div>
+    <div class="point-card"><div class="point-label">JKT48 LUCKY POINTS</div><div class="point-value" id="luckyPointsDisplay">0</div></div>
   </div>
 
   <div class="convert-box">
-    <span class="convert-label">✨ Tukar JKT48 LUCKY POINTS → POINTS (1:1)</span>
+    <span class="convert-label">Tukar JKT48 LUCKY POINTS → POINTS (1:1)</span>
     <input type="number" id="convertAmount" class="convert-input" value="1000" min="100" step="100">
     <button class="convert-btn" onclick="buySlotPoints()">BELI POINTS</button>
   </div>
 
   <div class="bonus-box">
-    <span class="convert-label">🎁 BONUS HARIAN (500 POINTS)</span>
+    <span class="convert-label"> BONUS HARIAN (500 POINTS)</span>
     <button class="bonus-btn" onclick="claimDailyBonus()">KLAIM BONUS</button>
     <div id="emergencyResetContainer" style="display:inline-block;"></div>
-    <button class="bonus-btn help-btn" onclick="openHelp()">❓ Cara Bermain</button>
+    <button class="bonus-btn help-btn" onclick="openHelp()"> Cara Bermain</button>
   </div>
 
   <div class="stats-bar">
@@ -252,7 +500,7 @@
   </div>
 
   <div class="section-box">
-    <div class="section-title">◆ ROTATING SHOP ◆ (Ganti tiap minggu)</div>
+    <div class="section-title">◆ ROTATING SHOP ◆</div>
     <div class="photocards-grid" id="shopGrid"></div>
   </div>
 
@@ -284,6 +532,17 @@ window.onclick = function(event) {
   if (event.target === modal) modal.style.display = 'none';
 }
 
+// ========== POPUP REDEEM ==========
+function showRedeemPopup(pc) {
+  const popup = document.getElementById('redeemPopup');
+  document.getElementById('popupImg').src = pc.img;
+  document.getElementById('popupName').innerText = pc.name;
+  popup.style.display = 'flex';
+}
+function closeRedeemPopup() {
+  document.getElementById('redeemPopup').style.display = 'none';
+}
+
 // ========== SLOT SYMBOLS ==========
 const SLOT_SYMBOLS = [
   { id:0, img:'images/slot/symbol1.png', label:'Member A', multiplier:5  },
@@ -292,7 +551,6 @@ const SLOT_SYMBOLS = [
 ];
 
 // ========== PHOTOCARD 44 MEMBER ==========
-// Ganti nama file sesuai dengan gambar yang Anda miliki
 const commonFiles = [ "Trisha.png", "Lana.png", "Nayla.png", "Gendis.png", "Anin.png", "Cynthia.png", "Erin.png", "Aralie.png", "Raisha.png" ];
 const rareFiles = [ "Ribka.png", "Oline.png", "Nala.png", "Nachia.png", "Lily.png", "Lia.png", "Fritzy.png", "Elin.png", "Cathy.png", "Delynn.png" ];
 const epicFiles = [ "Lyn.png", "Alya.png", "Anin.png", "Chelsea.png", "Dena.png", "Desy.png", "Ella.png", "Gracie.png", "Greesel.png", "Lia.png" ];
@@ -320,10 +578,10 @@ let slotPoints = 1000, luckyPoints = 0, spinCount = 0, lossStreak = 0;
 let ownedCards = new Set();
 let currentBet = 50, isSpinning = false;
 let todaySpinUsed = 0, lastResetDate = '', weeklyShopIds = [], lastDailyBonus = '';
-let emergencyUsed = false;   // reset darurat hanya sekali
+let emergencyUsed = false;
 const PITY_MAX = 200;
 
-// ========== DAILY LIMIT (ganjil = batasan 17, genap = unlimited) ==========
+// ========== DAILY LIMIT ==========
 function isTodayLimited() {
   const daysSinceEpoch = Math.floor(Date.now() / 86400000);
   return daysSinceEpoch % 2 === 1;
@@ -339,6 +597,35 @@ function getRemainingSpins() {
 function checkAndResetDaily() {
   const today = new Date().toDateString();
   if (lastResetDate !== today) { todaySpinUsed = 0; lastResetDate = today; saveGameData(); }
+}
+
+// ========== ROTATING SHOP (ganti tiap Senin) ==========
+function getLastMonday() {
+  const now = new Date();
+  const day = now.getDay();
+  const diff = (day === 0 ? 6 : day - 1);
+  const lastMonday = new Date(now);
+  lastMonday.setDate(now.getDate() - diff);
+  lastMonday.setHours(0, 0, 0, 0);
+  return lastMonday.getTime();
+}
+function updateWeeklyShop() {
+  const currentMonday = getLastMonday();
+  const savedMonday = localStorage.getItem('JKT48LUCKY_shop_monday');
+  const savedShop = localStorage.getItem('JKT48LUCKY_shop');
+  if(savedMonday && parseInt(savedMonday) === currentMonday && savedShop) {
+    weeklyShopIds = JSON.parse(savedShop);
+  } else {
+    const rarities = ['common','rare','epic','legendary','mythic'];
+    weeklyShopIds = rarities.map(rarity => {
+      const pool = PHOTOCARDS.filter(c => c.rarity === rarity);
+      if(pool.length===0) return -1;
+      const rand = Math.floor(Math.random() * pool.length);
+      return pool[rand].id;
+    });
+    localStorage.setItem('JKT48LUCKY_shop_monday', currentMonday);
+    localStorage.setItem('JKT48LUCKY_shop', JSON.stringify(weeklyShopIds));
+  }
 }
 
 function loadGameData() {
@@ -365,29 +652,6 @@ function loadGameData() {
 function saveGameData() {
   localStorage.setItem('JKT48LUCKY', JSON.stringify({ slotPoints, luckyPoints, spinCount, lossStreak, ownedCards: [...ownedCards], currentBet, todaySpinUsed, lastResetDate, lastDailyBonus, emergencyUsed }));
 }
-function getWeekNumber() {
-  const now = new Date();
-  const start = new Date(now.getFullYear(), 0, 1);
-  return Math.floor((now - start) / 86400000 / 7);
-}
-function updateWeeklyShop() {
-  const currentWeek = getWeekNumber();
-  const savedWeek = localStorage.getItem('JKT48LUCKY_week');
-  const savedShop = localStorage.getItem('JKT48LUCKY_shop');
-  if(savedWeek && parseInt(savedWeek)===currentWeek && savedShop) {
-    weeklyShopIds = JSON.parse(savedShop);
-  } else {
-    const rarities = ['common','rare','epic','legendary','mythic'];
-    weeklyShopIds = rarities.map(rarity => {
-      const pool = PHOTOCARDS.filter(c => c.rarity === rarity);
-      if(pool.length===0) return -1;
-      const rand = Math.floor(Math.random() * pool.length);
-      return pool[rand].id;
-    });
-    localStorage.setItem('JKT48LUCKY_week', currentWeek);
-    localStorage.setItem('JKT48LUCKY_shop', JSON.stringify(weeklyShopIds));
-  }
-}
 
 function claimDailyBonus() {
   const today = new Date().toDateString();
@@ -412,7 +676,7 @@ function emergencyReset() {
     checkAndResetDaily();
     renderUI();
     initReels();
-    showNotif('Reset darurat berhasil! Points & spin direset, koleksi tetap ✨');
+    showNotif('Reset darurat berhasil! Points & spin direset, koleksi tetap');
   }
 }
 function buySlotPoints() {
@@ -483,18 +747,19 @@ function renderShop() {
     div.innerHTML = `<div class="pc-img-wrap"><img src="${pc.img}" alt="${pc.name}" onerror="this.parentElement.innerHTML='<span class=\\'no-img\\'>🎴</span>'"></div>
       <span class="pc-rarity rarity-${pc.rarity}">${pc.rarity.toUpperCase()}</span>
       <span class="pc-name">${pc.name}</span>
-      <span class="pc-cost">✨ ${pc.cost.toLocaleString()}</span>`;
+      <span class="pc-cost"> ${pc.cost.toLocaleString()}</span>`;
     if(!owned && luckyPoints >= pc.cost) {
       const btn = document.createElement('button'); btn.className='redeem-btn'; btn.innerText='REDEEM'; btn.onclick=()=>redeemCard(pc.id);
       div.appendChild(btn);
     } else if(owned) {
       const span = document.createElement('span'); span.className='owned-badge'; span.innerText='✓ OWNED'; div.appendChild(span);
     } else {
-      const span = document.createElement('span'); span.className='owned-badge'; span.innerText='✨ Kurang Point'; div.appendChild(span);
+      const span = document.createElement('span'); span.className='owned-badge'; span.innerText='Kurang Point'; div.appendChild(span);
     }
     grid.appendChild(div);
   }
 }
+
 function renderAlbum() {
   const grid = document.getElementById('albumGrid');
   grid.innerHTML = '';
@@ -505,23 +770,24 @@ function renderAlbum() {
     div.className = `photocard-item ${bgClass}` + (owned ? ' owned' : '');
     div.innerHTML = `<div class="pc-img-wrap"><img src="${pc.img}" alt="${pc.name}" onerror="this.parentElement.innerHTML='<span class=\\'no-img\\'>🎴</span>'"></div>
       <span class="pc-rarity rarity-${pc.rarity}">${pc.rarity.toUpperCase()}</span>
-      <span class="pc-name">${pc.name}</span>${owned ? '<span class="owned-badge">★ KOLEKSI</span>' : '<span class="owned-badge" style="opacity:0.5;">?</span>'}`;
+      ${owned ? '<span class="owned-badge">★ KOLEKSI</span>' : '<span class="owned-badge" style="opacity:0.5;">?</span>'}`;
     grid.appendChild(div);
   });
 }
+
 function redeemCard(cardId) {
   const pc = PHOTOCARDS.find(c=>c.id===cardId);
   if(!pc || ownedCards.has(cardId)) return;
-  if(luckyPoints < pc.cost) { showNotif(`JKT48 LUCKY POINTS kurang! butuh ${pc.cost.toLocaleString()} ✨`); return; }
+  if(luckyPoints < pc.cost) { showNotif(`JKT48 LUCKY POINTS kurang! butuh ${pc.cost.toLocaleString()}`); return; }
   luckyPoints -= pc.cost;
   ownedCards.add(cardId);
   saveGameData();
   renderUI();
-  showNotif(`🎉 Mendapat ${pc.name} !`);
+  showRedeemPopup(pc);
   if(ownedCards.size===44) showNotif('✨ SELAMAT! Album lengkap! Tekan RESET GAME (album penuh) untuk memulai baru ✨');
 }
 
-// ========== SLOT MACHINE FUNCTIONS ==========
+// ========== SLOT MACHINE FUNCTIONS (tidak berubah) ==========
 function buildReelContent(inner){
   inner.innerHTML='';
   const pool=[...Array(7).fill(SLOT_SYMBOLS[0]),...Array(2).fill(SLOT_SYMBOLS[1]),...Array(1).fill(SLOT_SYMBOLS[2])].sort(()=>Math.random()-.5);
@@ -552,8 +818,8 @@ function initReels(){
 function getOutcome(){
   if(lossStreak>=PITY_MAX) return 'jackpot';
   const bonus_j = Math.min(lossStreak*0.00015, 0.01);
-  const jChance = 0.008 + bonus_j;   // jackpot 0.8%
-  const mChance = 0.5;               // match2 50%
+  const jChance = 0.008 + bonus_j;
+  const mChance = 0.5;
   const r = Math.random();
   if(r < jChance) return 'jackpot';
   if(r < jChance + mChance) return 'match2';
@@ -601,7 +867,6 @@ async function spin(){
     while(d===s) d=Math.floor(Math.random()*SLOT_SYMBOLS.length);
     r=Math.random()<.5?[s,s,d]:[d,s,s];
   } else {
-    // LOSE: semua simbol berbeda
     let a = Math.floor(Math.random() * SLOT_SYMBOLS.length);
     let b = Math.floor(Math.random() * SLOT_SYMBOLS.length);
     while (b === a) b = Math.floor(Math.random() * SLOT_SYMBOLS.length);
@@ -627,40 +892,38 @@ async function spin(){
   }
 }
 function evaluateResult(r,outcome){
-  let wonSlot=0, wonLucky=0, msg='';
-  const container=document.getElementById('reelsContainer');
-  if(outcome==='jackpot'){
-    const s=SLOT_SYMBOLS[r[0]];
-    wonSlot=Math.round(currentBet*s.multiplier*3);
-    wonLucky=wonSlot;
-    msg=`✦ JACKPOT! ${s.label} ×3 — +${wonSlot} POINTS & JKT48 LUCKY POINTS ✦`;
+  let wonLucky = 0;
+  let msg = '';
+  const container = document.getElementById('reelsContainer');
+  if(outcome === 'jackpot'){
+    const s = SLOT_SYMBOLS[r[0]];
+    wonLucky = Math.round(currentBet * s.multiplier * 3);
+    msg = `✦ JACKPOT! +${wonLucky} JKT48 LUCKY POINTS ✦`;
     container.classList.add('winning');
-    showWinOverlay(wonSlot,s,'JACKPOT!');
+    showWinOverlay(wonLucky, s, 'JACKPOT!');
     spawnConfetti();
-    lossStreak=0;
-  } else if(outcome==='match2'){
-    const s=(r[0]===r[1])?SLOT_SYMBOLS[r[0]]:SLOT_SYMBOLS[r[1]];
-    wonSlot=Math.round(currentBet*s.multiplier);
-    wonLucky=wonSlot;
-    msg=`◆ MATCH! ${s.label} ×2 — +${wonSlot} POINTS & JKT48 LUCKY POINTS ◆`;
+    lossStreak = 0;
+  } else if(outcome === 'match2'){
+    const s = (r[0] === r[1]) ? SLOT_SYMBOLS[r[0]] : SLOT_SYMBOLS[r[1]];
+    wonLucky = Math.round(currentBet * s.multiplier);
+    msg = `✦ MATCH! +${wonLucky} JKT48 LUCKY POINTS ✦`;
     container.classList.add('winning');
-    showWinOverlay(wonSlot,s,'MATCH!');
+    showWinOverlay(wonLucky, s, 'MATCH!');
     lossStreak++;
   } else {
-    msg='✦ Tidak beruntung... coba lagi ✦';
+    msg = '✦ Tidak beruntung... coba lagi ✦';
     lossStreak++;
   }
-  if(wonSlot>0){
-    slotPoints+=wonSlot;
-    luckyPoints+=wonLucky;
+  if(wonLucky > 0){
+    luckyPoints += wonLucky;
   }
   saveGameData();
   updateUIStats();
-  document.getElementById('statusMsg').innerText=msg;
-  document.getElementById('spinBtn').disabled=false;
-  isSpinning=false;
+  document.getElementById('statusMsg').innerText = msg;
+  document.getElementById('spinBtn').disabled = false;
+  isSpinning = false;
   renderUI();
-  setTimeout(()=>container.classList.remove('winning'),800);
+  setTimeout(() => container.classList.remove('winning'), 800);
 }
 function updateUIStats(){
   document.getElementById('slotPointsDisplay').innerText = slotPoints.toLocaleString();
@@ -690,7 +953,7 @@ function resetFullGame(){
     updateWeeklyShop();
     renderUI();
     initReels();
-    showNotif('Game direset total! Mulai baru ✨');
+    showNotif('Game direset total! Mulai baru');
   }
 }
 
