@@ -4,6 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>JKT48 LUCKY</title>
+
+<!-- ========== LOGO / FAVICON ========== -->
+<!-- Siapkan file gambar logo di folder images/logo/ sesuai ukuran, atau gunakan favicon.ico di root -->
+<link rel="icon" type="image/png" sizes="16x16" href="images/logo/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="images/logo/favicon-32x32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="images/logo/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="images/logo/android-chrome-192x192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="images/logo/android-chrome-512x512.png">
+<!-- Alternatif: cukup satu file favicon.ico di folder root -->
+<!-- <link rel="icon" type="image/x-icon" href="favicon.ico"> -->
+
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -124,14 +135,20 @@
     filter: brightness(1.05) saturate(1.1);
     box-shadow: 0 0 6px currentColor;
   }
-  /* Album: gambar sangat gelap + blur, nama tidak tampil */
-  #albumGrid .pc-img-wrap img {
+  /* Album: gambar belum owned -> buram & gelap; gambar owned -> jelas */
+  #albumGrid .photocard-item:not(.owned) .pc-img-wrap img {
     filter: blur(8px) brightness(0.3) saturate(0.2);
+  }
+  #albumGrid .photocard-item.owned .pc-img-wrap img {
+    filter: none;
   }
   #albumGrid .pc-name {
     display: none;
   }
-  /* Shop: tetap jelas, nama tampil */
+  #albumGrid .photocard-item.owned .pc-name {
+    display: block;
+  }
+  /* Shop: selalu jelas */
   #shopGrid .pc-name {
     display: block;
   }
@@ -160,7 +177,7 @@
     0% { border-color: #b77dc6; box-shadow: inset 0 0 2px rgba(206,147,216,0.2), 0 0 2px rgba(206,147,216,0.1); }
     100% { border-color: #f0c0ff; box-shadow: inset 0 0 10px rgba(206,147,216,0.5), 0 0 8px rgba(206,147,216,0.3); }
   }
-  /* Legendary dengan shimmer emas di atas gambar */
+  /* Legendary - efek dikurangi (shimmer lebih lambat dan tipis) */
   .legendary-bg {
     background: linear-gradient(135deg, #1a1000, #2a2000);
     border: 1px solid var(--gold-light);
@@ -173,9 +190,9 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(90deg, transparent, rgba(212,175,55,0.15), transparent);
+    background: linear-gradient(90deg, transparent, rgba(212,175,55,0.1), transparent);
     background-size: 200% 100%;
-    animation: shimmerBg 3s infinite linear;
+    animation: shimmerBg 5s infinite linear;
     pointer-events: none;
     z-index: 1;
   }
@@ -190,9 +207,9 @@
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,215,0,0.5), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255,215,0,0.3), transparent);
     transform: skewX(-20deg);
-    animation: legendShimmer 2.5s infinite ease-in-out;
+    animation: legendShimmer 4s infinite ease-in-out;
     pointer-events: none;
     z-index: 3;
   }
@@ -202,16 +219,16 @@
     100% { left: 120%; }
   }
 
-  /* Mythic - efek lebih menarik dari Legendary */
+  /* Mythic - efek dikurangi (pulse lebih lambat, glow lebih tipis) */
   .mythic-bg {
     background: linear-gradient(135deg, #1a0a1a, #3d0a2a);
     border: 2px solid #FF6B6B;
     position: relative;
-    animation: mythicPulse 0.8s infinite ease-in-out;
+    animation: mythicPulse 1.5s infinite ease-in-out;
   }
   @keyframes mythicPulse {
-    0% { box-shadow: 0 0 0 0 rgba(255,107,107,0.6); border-color: #FF6B6B; }
-    50% { box-shadow: 0 0 0 8px rgba(255,107,107,0.3); border-color: #ffcccc; }
+    0% { box-shadow: 0 0 0 0 rgba(255,107,107,0.3); border-color: #FF6B6B; }
+    50% { box-shadow: 0 0 0 4px rgba(255,107,107,0.1); border-color: #ffcccc; }
     100% { box-shadow: 0 0 0 0 rgba(255,107,107,0); border-color: #FF6B6B; }
   }
   .mythic-bg .pc-img-wrap::before {
@@ -221,9 +238,9 @@
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,105,180,0.7), rgba(255,0,150,0.5), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255,105,180,0.4), rgba(255,0,150,0.3), transparent);
     transform: skewX(-15deg);
-    animation: mythicShimmer 1.2s infinite ease-in-out;
+    animation: mythicShimmer 2s infinite ease-in-out;
     pointer-events: none;
     z-index: 3;
   }
@@ -237,17 +254,17 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 120%;
-    height: 120%;
-    background: radial-gradient(circle, rgba(255,107,107,0.3), transparent);
-    transform: translate(-50%, -50%) scale(0.8);
-    animation: mythicGlowExpand 1s infinite alternate;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(255,107,107,0.15), transparent);
+    transform: translate(-50%, -50%) scale(0.9);
+    animation: mythicGlowExpand 1.5s infinite alternate;
     pointer-events: none;
     z-index: 2;
   }
   @keyframes mythicGlowExpand {
-    from { transform: translate(-50%, -50%) scale(0.8); opacity: 0.5; }
-    to { transform: translate(-50%, -50%) scale(1.2); opacity: 0; }
+    from { transform: translate(-50%, -50%) scale(0.9); opacity: 0.3; }
+    to { transform: translate(-50%, -50%) scale(1.1); opacity: 0; }
   }
 
   .pc-img-wrap {
@@ -268,6 +285,7 @@
   .legendary-bg .pc-img-wrap { border: 2px solid var(--gold-light); }
   .mythic-bg .pc-img-wrap { border: 2px solid #FF6B6B; }
 
+  /* Shine umum untuk semua card (tipis, lambat) */
   .pc-img-wrap::after {
     content: '';
     position: absolute;
@@ -275,9 +293,9 @@
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
     transform: skewX(-20deg);
-    animation: shineOverlay 6s infinite ease-in-out;
+    animation: shineOverlay 8s infinite ease-in-out;
     pointer-events: none;
     z-index: 2;
   }
@@ -312,10 +330,10 @@
   .rarity-common { color:#9E9E9E; font-style:normal; font-weight:normal; }
   .rarity-rare { color:#4FC3F7; font-style:italic; font-weight:normal; }
   .rarity-epic { color:#CE93D8; font-style:normal; font-weight:bold; }
-  .rarity-legendary { color:var(--gold-light); font-weight:bold; text-shadow:0 0 3px rgba(212,175,55,0.5); animation: glitter 1s infinite; }
-  @keyframes glitter { 0% { text-shadow:0 0 1px var(--gold-light); } 50% { text-shadow:0 0 6px var(--gold); } 100% { text-shadow:0 0 1px var(--gold-light); } }
-  .rarity-mythic { color:#FF6B6B; font-style:italic; font-weight:bold; text-shadow:0 0 4px #FF6B6B; animation: mythicTextGlow 0.6s infinite alternate; }
-  @keyframes mythicTextGlow { from { text-shadow:0 0 1px #FF6B6B; } to { text-shadow:0 0 12px #ff3b3b; } }
+  .rarity-legendary { color:var(--gold-light); font-weight:bold; text-shadow:0 0 2px rgba(212,175,55,0.3); animation: glitter 2s infinite; }
+  @keyframes glitter { 0% { text-shadow:0 0 1px var(--gold-light); } 50% { text-shadow:0 0 4px var(--gold); } 100% { text-shadow:0 0 1px var(--gold-light); } }
+  .rarity-mythic { color:#FF6B6B; font-style:italic; font-weight:bold; text-shadow:0 0 2px #FF6B6B; animation: mythicTextGlow 1.2s infinite alternate; }
+  @keyframes mythicTextGlow { from { text-shadow:0 0 1px #FF6B6B; } to { text-shadow:0 0 6px #ff3b3b; } }
 
   .pc-name { font-size: 8px; display: block; margin-bottom: 2px; color: var(--cream); }
   .pc-cost { font-size: 10px; font-weight: 700; display: block; margin-top: 2px; }
@@ -768,8 +786,10 @@ function renderAlbum() {
     const bgClass = `${pc.rarity}-bg`;
     const div = document.createElement('div');
     div.className = `photocard-item ${bgClass}` + (owned ? ' owned' : '');
+    // Nama akan muncul hanya jika owned (CSS sudah atur)
     div.innerHTML = `<div class="pc-img-wrap"><img src="${pc.img}" alt="${pc.name}" onerror="this.parentElement.innerHTML='<span class=\\'no-img\\'>🎴</span>'"></div>
       <span class="pc-rarity rarity-${pc.rarity}">${pc.rarity.toUpperCase()}</span>
+      <span class="pc-name">${pc.name}</span>
       ${owned ? '<span class="owned-badge">★ KOLEKSI</span>' : '<span class="owned-badge" style="opacity:0.5;">?</span>'}`;
     grid.appendChild(div);
   });
